@@ -1,6 +1,7 @@
 import { DashboardHeader } from "../../components/dashboard/DashboardHeader";
 import { StreamerCard } from "../../components/viewer/StreamerCard";
 import { Input } from "../../components/ui/input";
+import { ProtectedRoute } from "../../components/auth/ProtectedRoute";
 import { Search } from "lucide-react";
 
 const mockStreamers = [
@@ -48,7 +49,12 @@ const mockStreamers = [
 
 export default function ViewerBrowse() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+    <ProtectedRoute 
+      message="Connectez votre wallet pour découvrir les streamers et soutenir vos favoris"
+      requireTwitch={true}
+      allowedRoles={['viewer']}
+    >
+      <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
       <DashboardHeader role="viewer" />
       
       <main className="max-w-7xl mx-auto p-8">
@@ -98,6 +104,7 @@ export default function ViewerBrowse() {
           </div>
         </div>
       </main>
-    </div>
+      </div>
+    </ProtectedRoute>
   );
 }

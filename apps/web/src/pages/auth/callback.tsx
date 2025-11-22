@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { LoadingSpinner } from "../../components/auth/LoadingSpinner";
 import { ProgressStepper } from "../../components/auth/ProgressStepper";
-import { WalletConnectModal } from "../../components/auth/WalletConnectModal";
 import { Alert, AlertDescription } from "../../components/ui/alert";
 import { Button } from "../../components/ui/button";
 import { AlertCircle, CheckCircle2 } from "lucide-react";
+import { useZkLogin } from "../../hooks/useZkLogin";
 
 type AuthStep = "authenticating" | "wallet" | "mapping" | "success" | "error";
 
@@ -14,59 +14,74 @@ export default function OAuthCallback() {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState<AuthStep>("authenticating");
   const [error, setError] = useState<string | null>(null);
-  const [walletConnected, setWalletConnected] = useState(false);
-  const [showWalletModal, setShowWalletModal] = useState(false);
+  const zkLogin = useZkLogin();
 
   const code = searchParams.get("code");
-  const state = searchParams.get("state");
   const role = searchParams.get("role") || "viewer";
 
-  useEffect(() => {
-    if (!code) {
-      setError("Code d'authentification manquant");
+  // Détecter si c'est un callback zkLogin
+  const isZkLoginCallback = typeof window !== 'undefined' && 
+    (window.location.hash.includes('id_token') || window.location.hash.includes('access_token'));
+
+  /**
+   * Callback zkLogin - Génère l'adresse Sui depuis le JWT social
+   */
+  const handleZkLoginCallback = async () => {
+    try {
+      setCurrentStep("wallet");
+      console.log('[Callback] Traitement zkLogin...');
+      
+      // Le hook zkLogin traite le JWT et génère l'adresse Sui
+      const address = await zkLogin.handleCallback();
+      
+      console.log('[Callback] Adresse Sui générée:', address);
+      
+      // Passer au mapping
+      setCurrentStep("mapping");
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      
+      setCurrentStep("success");
+      
+      // Auto-redirect après 2 secondes
+      setTimeout(() => {
+        redirectToDashboard();
+      }, 2000);
+      
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Erreur zkLogin';
+      setError(`Échec de la connexion zkLogin: ${message}`);
       setCurrentStep("error");
-      return;
+      console.error('[Callback] Erreur zkLogin:', err);
     }
+  };
 
-    authenticateWithTwitch();
-  }, [code]);
-
+  /**
+   * Flow OAuth Twitch classique (sans zkLogin)
+   */
   const authenticateWithTwitch = async () => {
     try {
+      console.log('[Callback] Authentification Twitch classique...');
+      
       // Simulate OAuth authentication
       await new Promise((resolve) => setTimeout(resolve, 1500));
       
       setCurrentStep("wallet");
       
-      // Check if wallet is already connected
-      const hasWallet = checkWalletConnection();
+      // Pour Twitch classique, on demande la connexion wallet séparée
+      // (pas de zkLogin, donc besoin d'un wallet externe)
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       
-      if (!hasWallet) {
-        setShowWalletModal(true);
-      } else {
-        setWalletConnected(true);
-        proceedToMapping();
-      }
+      setCurrentStep("mapping");
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      
+      setCurrentStep("success");
+      
+      setTimeout(() => {
+        redirectToDashboard();
+      }, 2000);
+      
     } catch (err) {
       setError("Échec de l'authentification Twitch. Veuillez réessayer.");
-      setCurrentStep("error");
-    }
-  };
-
-  const checkWalletConnection = () => {
-    // Mock wallet check - in production, check for actual wallet connection
-    return false;
-  };
-
-  const handleWalletConnect = async () => {
-    try {
-      // Simulate wallet connection
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setWalletConnected(true);
-      setShowWalletModal(false);
-      proceedToMapping();
-    } catch (err) {
-      setError("Échec de la connexion au wallet");
       setCurrentStep("error");
     }
   };
@@ -99,6 +114,21 @@ export default function OAuthCallback() {
 
     navigate(roleRoutes[role] || "/");
   };
+
+  // Effect pour gérer l'authentification au chargement
+  useEffect(() => {
+    if (isZkLoginCallback) {
+      // Flow zkLogin (Google/Facebook/Twitch social login)
+      handleZkLoginCallback();
+    } else if (code) {
+      // Flow OAuth Twitch classique
+      authenticateWithTwitch();
+    } else {
+      setError("Code d'authentification manquant");
+      setCurrentStep("error");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleRetry = () => {
     setError(null);
@@ -153,8 +183,8 @@ export default function OAuthCallback() {
             </div>
           )}
 
-          {/* Wallet Connection Required */}
-          {currentStep === "wallet" && !walletConnected && (
+          {/* Wallet Connection / Generation */}
+          {currentStep === "wallet" && (
             <div className="mt-8 text-center">
               <div className="w-16 h-16 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg
@@ -171,7 +201,12 @@ export default function OAuthCallback() {
                   />
                 </svg>
               </div>
-              <p className="text-slate-300 mb-4">Connexion de votre wallet Sui...</p>
+              <LoadingSpinner size="md" />
+              <p className="text-slate-300 mb-4 mt-4">
+                {isZkLoginCallback 
+                  ? 'Génération de votre wallet Sui...' 
+                  : 'Connexion de votre wallet Sui...'}
+              </p>
             </div>
           )}
 
@@ -225,12 +260,6 @@ export default function OAuthCallback() {
         </div>
       </div>
 
-      {/* Wallet Connect Modal */}
-      <WalletConnectModal
-        open={showWalletModal}
-        onClose={() => setShowWalletModal(false)}
-        onConnect={handleWalletConnect}
-      />
     </div>
   );
 }

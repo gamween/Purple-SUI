@@ -5,6 +5,7 @@ import { StatsCard } from "../../components/dashboard/StatsCard";
 import { Button } from "../../components/ui/button";
 import { Card } from "../../components/ui/card";
 import { Badge } from "../../components/ui/badge";
+import { ProtectedRoute } from "../../components/auth/ProtectedRoute";
 import { 
   Zap, 
   Coins, 
@@ -99,10 +100,15 @@ const weeklyData = [
 
 export default function DevDashboard() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
-      <DashboardHeader role="dev" />
-      
-      <div className="flex">
+    <ProtectedRoute 
+      message="Connectez votre wallet pour accéder au dashboard développeur"
+      requireTwitch={false}
+      allowedRoles={['dev']}
+    >
+      <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+        <DashboardHeader role="dev" />
+        
+        <div className="flex">
         <Sidebar role="dev" activeItem="dashboard" />
         
         <main className="flex-1 p-8">
@@ -350,7 +356,8 @@ export default function DevDashboard() {
             </div>
           </div>
         </main>
+        </div>
       </div>
-    </div>
+    </ProtectedRoute>
   );
 }

@@ -4,6 +4,7 @@ import { Sidebar } from "../../components/dashboard/Sidebar";
 import { StatsCard } from "../../components/dashboard/StatsCard";
 import { BountyCard } from "../../components/bounties/BountyCard";
 import { Button } from "../../components/ui/button";
+import { ProtectedRoute } from "../../components/auth/ProtectedRoute";
 import { Coins, Award, TrendingUp, Radio } from "lucide-react";
 
 const mockMarketplaceBounties = [
@@ -59,7 +60,12 @@ export default function StreamerDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+    <ProtectedRoute 
+      message="Connectez votre wallet pour accéder au dashboard streamer"
+      requireTwitch={true}
+      allowedRoles={['streamer']}
+    >
+      <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
       <DashboardHeader role="streamer" />
       
       <div className="flex">
@@ -177,7 +183,8 @@ export default function StreamerDashboard() {
             )}
           </div>
         </main>
+        </div>
       </div>
-    </div>
+    </ProtectedRoute>
   );
 }
