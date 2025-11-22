@@ -117,85 +117,66 @@ Une dApp DeFi sur SUI sponsorise des streams de démonstration live [39]. Les NF
 **StreamSUI transforme le streaming en un moteur de croissance décentralisé pour l'écosystème SUI, où chaque participant (dev, streamer, viewer) est directement récompensé pour sa contribution authentique** [26][16][24].
 
 
-voici l'architectrure du projet plus ou moins : 
-devinci-sui/
-devinci-sui/
+## 📁 Architecture du Projet
+
+```
+devinci/
 │
-├── contracts/
-│   └── sui-bounties/
-│        ├── Move.toml
-│        ├── sources/
-│        │    ├── bounty.move                  # PRIORITÉ 1 - Contrats streamer/dev
-│        │    └── donation_split.move          # PRIORITÉ 1 - Fusion donation + reward distribution avec splits automatiques
-│        └── tests/
-│             └── bounty_tests.move            # Tests minimaux (2-3 tests core)
+├── contracts/                             # Smart Contracts Sui (Move)
+│   ├── Move.toml                          # Configuration package Sui
+│   ├── sources/
+│   │   ├── bounty.move                   # Contrats streamer/dev
+│   │   ├── donation_split.move           # Splits automatiques des donations
+│   │   └── nft_airdrop.move              # Distribution NFTs aux viewers
+│   └── tests/
+│       └── bounty_tests.move             # Tests des smart contracts
 │
 ├── apps/
-│   ├── api/
-│   │    ├── src/
-│   │    │    ├── routes/
-│   │    │    │    ├── auth.routes.ts          # OAuth Twitch simple
-│   │    │    │    ├── bounty.routes.ts        # CRUD bounties
-│   │    │    │    ├── donation.routes.ts      # Trigger smart contract splits
-│   │    │    │    └── twitch.routes.ts        # Fetch stream info uniquement
-│   │    │    ├── services/
-│   │    │    │    ├── bounty.service.ts       # Logique métier + appels smart contract
-│   │    │    │    ├── donation.service.ts     # Appels smart contract donation_split
-│   │    │    │    └── twitch-api.service.ts   # Fusion auth + API calls Twitch
-│   │    │    ├── web3/
-│   │    │    │    └── sui-client.ts           # Client Sui unifié
-│   │    │    └── db/
-│   │    │         ├── models.ts               # Mapping Twitch/Sui addresses (remplace user_registry.move)
-│   │    │         └── prisma/
-│   │    └── package.json
+│   ├── api/                              # Backend Express + TypeScript
+│   │   ├── src/
+│   │   │   ├── routes/                   # API REST
+│   │   │   │   ├── auth.routes.ts        # OAuth Twitch
+│   │   │   │   ├── bounty.routes.ts      # CRUD bounties
+│   │   │   │   ├── donation.routes.ts    # Trigger smart contracts
+│   │   │   │   └── twitch.routes.ts      # Stream info Twitch API
+│   │   │   ├── services/                 # Logique métier
+│   │   │   │   ├── auth.service.ts       # Authentification
+│   │   │   │   ├── bounty.service.ts     # Gestion bounties
+│   │   │   │   ├── donation.service.ts   # Appels SC donation
+│   │   │   │   └── twitch-webhook.service.ts  # Webhooks Twitch
+│   │   │   ├── web3/                     # Intégration blockchain
+│   │   │   │   └── sui-client.ts         # Client Sui SDK
+│   │   │   └── db/                       # Base de données
+│   │   │       └── models.ts             # Mapping Twitch/Sui
+│   │   └── package.json
+│   │
+│   ├── web/                              # Frontend React + Vite
+│   │   ├── src/
+│   │   │   ├── pages/                    # Pages de l'app
+│   │   │   │   ├── LandingPage.tsx       # Page d'accueil
+│   │   │   │   ├── auth/                 # Login/Callback
+│   │   │   │   ├── dev/                  # Dashboard dev + bounties
+│   │   │   │   ├── streamer/             # Dashboard streamer
+│   │   │   │   └── viewer/               # Browse streams
+│   │   │   ├── components/               # Composants React
+│   │   │   │   ├── ui/                   # shadcn/ui (40+ composants)
+│   │   │   │   ├── dashboard/            # Sidebar, Header, Stats
+│   │   │   │   ├── bounties/             # BountyCard
+│   │   │   │   └── viewer/               # StreamerCard
+│   │   │   └── lib/                      # Utilitaires
+│   │   │       ├── networkConfig.ts      # Config réseaux Sui
+│   │   │       └── providers.tsx         # React Query + Sui Provider
+│   │   ├── vite.config.ts
+│   │   └── package.json
+│   │
+│   └── twitch-extension/                 # Extension Twitch (optionnel)
+│       └── package.json
 │
-│   ├── web/
-│   │    ├── src/
-│   │    │    ├── pages/
-│   │    │    │    ├── index.tsx               # Landing page
-│   │    │    │    ├── auth/
-│   │    │    │    │    └── callback.tsx       # OAuth redirect
-│   │    │    │    ├── dev/
-│   │    │    │    │    └── bounties.tsx       # Devs postent bounties
-│   │    │    │    ├── streamer/
-│   │    │    │    │    └── dashboard.tsx      # Streamers voient/acceptent bounties
-│   │    │    │    └── viewer/
-│   │    │    │         └── [streamerId].tsx   # NOUVEAU - Twitch iframe + donation widget
-│   │    │    ├── components/
-│   │    │    │    ├── ui/                     # shadcn/ui components directement ici
-│   │    │    │    ├── BountyCard.tsx
-│   │    │    │    └── DonationWidget.tsx      # Widget donation avec split display
-│   │    │    ├── hooks/
-│   │    │    │    └── useSuiWallet.ts
-│   │    │    └── lib/
-│   │    │         └── sui.ts                  # Helper functions Sui SDK
-│   │    └── package.json
-│
-├── packages/
-│   ├── shared/                                 # Renommé de "core"
-│   │    └── src/
-│   │         ├── types/
-│   │         │    ├── bounty.ts
-│   │         │    ├── donation.ts
-│   │         │    └── user.ts
-│   │         ├── constants/
-│   │         │    └── contracts.ts            # Adresses smart contracts
-│   │         └── index.ts
-│   └── web3-sdk/                              # Renommé de "web3"
-│        └── src/
-│             ├── client.ts                    # Client Sui configuré
-│             ├── bounty.service.ts            # Fonctions interaction bounty.move
-│             ├── donation.service.ts          # Fonctions interaction donation_split.move
-│             └── index.ts
-│
-└── .vscode/
+└── infra/                                # Infrastructure (optionnel)
+    └── docker-compose.yml
 
-# SUPPRIMÉ :
-# - packages/ui/ (utiliser shadcn/ui direct dans web)
-# - apps/twitch-extension/ (remplacé par apps/web/pages/viewer/)
-# - infra/ (docker, k8s - over-engineering pour hackathon)
-# - contracts/.../reward_distribution.move (fusionné dans donation_split.move)
-# - contracts/.../user_registry.move (déplacé en DB)
-# - contracts/.../tests/donation_tests.move (tests minimaux dans bounty_tests.move suffit)
-# - apps/api/.../auth.service.ts (fusionné dans twitch-api.service.ts)
-# - apps/api/.../twitch-webhook.service.ts (scope trop large pour 22h)
+# Commandes
+pnpm dev:web      # Lance le frontend (port 3000)
+pnpm dev:api      # Lance le backend (port 3001)
+pnpm build:web    # Build frontend
+```
