@@ -41,8 +41,8 @@ const bountyData = {
     avgViewers: "450"
   },
   contract: {
-    address: "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
-    network: "Sui Mainnet",
+    address: null, // TODO: Intégrer l'adresse réelle du smart contract depuis le backend
+    network: "Sui Testnet",
     createdAt: "2024-11-15T10:30:00Z",
   },
   donations: 35.5,
@@ -264,22 +264,26 @@ export default function BountyDetail() {
                       <label className="text-slate-400 text-sm mb-2 block">Adresse du contrat</label>
                       <div className="flex items-center gap-3 p-4 bg-slate-800/50 rounded-lg border border-slate-700">
                         <code className="flex-1 text-purple-400 font-mono text-sm">
-                          {bountyData.contract.address}
+                          {bountyData.contract.address || "Contrat en cours de déploiement..."}
                         </code>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => copyToClipboard(bountyData.contract.address)}
-                        >
-                          {copied ? (
-                            <CheckCircle2 className="w-4 h-4 text-green-400" />
-                          ) : (
-                            <Copy className="w-4 h-4 text-slate-400" />
-                          )}
-                        </Button>
-                        <Button variant="ghost" size="sm">
-                          <ExternalLink className="w-4 h-4 text-slate-400" />
-                        </Button>
+                        {bountyData.contract.address && (
+                          <>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => copyToClipboard(bountyData.contract.address!)}
+                            >
+                              {copied ? (
+                                <CheckCircle2 className="w-4 h-4 text-green-400" />
+                              ) : (
+                                <Copy className="w-4 h-4 text-slate-400" />
+                              )}
+                            </Button>
+                            <Button variant="ghost" size="sm">
+                              <ExternalLink className="w-4 h-4 text-slate-400" />
+                            </Button>
+                          </>
+                        )}
                       </div>
                     </div>
 

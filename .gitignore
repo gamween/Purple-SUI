@@ -110,3 +110,9 @@ temp/
 
 # Turbo
 .turbo
+
+# SSL Certificates (mkcert)
+apps/web/certificates/
+*.pem
+*.key
+*.crt

@@ -5,14 +5,17 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:https": "vite --host",
     "build": "vite build",
     "preview": "vite preview",
+    "setup-https": "bash setup-https.sh",
     "lint": "eslint src --ext .ts,.tsx",
     "lint:fix": "eslint src --ext .ts,.tsx --fix"
   },
   "dependencies": {
     "@mysten/dapp-kit": "0.18.0",
     "@mysten/sui": "1.38.0",
+    "@mysten/zklogin": "^0.8.1",
     "@radix-ui/react-accordion": "^1.2.3",
     "@radix-ui/react-alert-dialog": "^1.1.6",
     "@radix-ui/react-aspect-ratio": "^1.1.2",

@@ -5,6 +5,7 @@ import { StatsCard } from "../../components/dashboard/StatsCard";
 import { Button } from "../../components/ui/button";
 import { Card } from "../../components/ui/card";
 import { Badge } from "../../components/ui/badge";
+import { ProtectedRoute } from "../../components/auth/ProtectedRoute";
 import { 
   Zap, 
   Coins, 
@@ -122,7 +123,12 @@ export default function StreamerDashboard() {
   const navigate = useNavigate();
   
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+    <ProtectedRoute 
+      message="Connectez votre wallet pour accéder au dashboard streamer"
+      requireTwitch={true}
+      allowedRoles={['streamer']}
+    >
+      <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
       <DashboardHeader role="streamer" />
       
       <div className="flex">
@@ -428,7 +434,8 @@ export default function StreamerDashboard() {
             </div>
           </div>
         </main>
+        </div>
       </div>
-    </div>
+    </ProtectedRoute>
   );
 }

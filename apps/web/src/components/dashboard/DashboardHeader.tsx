@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Wallet, Bell, User, LogOut, X, Check, MessageSquare, Zap, Coins } from "lucide-react";
+import { Bell, User, LogOut, X, Check, MessageSquare, Zap, Coins } from "lucide-react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import {
@@ -10,6 +10,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import { WalletButton } from "../wallet/WalletButton";
+import { TwitchButton } from "../twitch/TwitchButton";
+import { useUser } from "../../context/UserContext";
 import { useNotifications } from "../../lib/NotificationContext";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -19,10 +22,22 @@ interface DashboardHeaderProps {
 }
 
 export function DashboardHeader({ role }: DashboardHeaderProps) {
-  const [walletAddress] = useState("0x7a8f...9b3c");
+  // User context (OAuth Twitch + Wallet)
+  const { suiAddress, isConnected, twitchData, isTwitchConnected } = useUser();
+  
+  // Notifications system
   const [showNotifications, setShowNotifications] = useState(false);
   const navigate = useNavigate();
   const { notifications, unreadCount, markAsRead, markAllAsRead, clearNotification } = useNotifications();
+  
+  // Vérifier si Twitch est requis pour ce rôle
+  const requiresTwitch = role === 'streamer' || role === 'viewer';
+  
+  // Formater l'adresse pour affichage court
+  const formatAddress = (address: string | null) => {
+    if (!address) return "Non connecté";
+    return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  };
 
   const notificationIcons = {
     bounty_offer: Zap,
@@ -62,11 +77,11 @@ export function DashboardHeader({ role }: DashboardHeaderProps) {
 
           {/* Right side */}
           <div className="flex items-center gap-4">
-            {/* Wallet */}
-            <div className="hidden md:flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-green-500/20 rounded-lg">
-              <Wallet className="w-4 h-4 text-green-400" />
-              <span className="text-sm text-green-400">{walletAddress}</span>
-            </div>
+            {/* Twitch Button - Visible pour tous, obligatoire pour streamer/viewer */}
+            <TwitchButton />
+            
+            {/* Wallet Button - Vrai système de connexion */}
+            <WalletButton />
 
             {/* Notifications */}
             <div className="relative">
@@ -171,20 +186,29 @@ export function DashboardHeader({ role }: DashboardHeaderProps) {
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="bg-slate-900 border-slate-800">
-                <div className="px-3 py-2">
-                  <p className="text-sm text-white">
+                <div className="px-3 py-2 space-y-1">
+                  <p className="text-sm text-white font-medium">
                     {role === "dev" ? "Développeur" : role === "streamer" ? "Streamer" : "Viewer"}
                   </p>
-                  <p className="text-xs text-slate-400">{walletAddress}</p>
+                  <p className="text-xs text-slate-400">
+                    {isConnected ? formatAddress(suiAddress) : "Non connecté"}
+                  </p>
+                  {isTwitchConnected && twitchData && (
+                    <p className="text-xs text-purple-400 flex items-center gap-1">
+                      <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/>
+                      </svg>
+                      {twitchData.username}
+                    </p>
+                  )}
+                  {requiresTwitch && !isTwitchConnected && (
+                    <p className="text-xs text-amber-400">⚠️ Twitch requis</p>
+                  )}
                 </div>
                 <DropdownMenuSeparator className="bg-slate-800" />
                 <DropdownMenuItem className="text-slate-300 hover:text-white hover:bg-slate-800">
                   <User className="w-4 h-4 mr-2" />
                   Mon profil
-                </DropdownMenuItem>
-                <DropdownMenuItem className="text-slate-300 hover:text-white hover:bg-slate-800">
-                  <Wallet className="w-4 h-4 mr-2" />
-                  Gérer wallet
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-slate-800" />
                 <DropdownMenuItem
