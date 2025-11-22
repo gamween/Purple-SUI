@@ -1,3 +1,7 @@
+Voici un exemple de README clair et détaillé pour ton app, intégrant tout ce qu’on a décidé (FanPass, badges, Seal, Nautilus).
+
+***
+
 # CreatorSeal – Fan Engagement Hub on Sui
 
 CreatorSeal est une dApp Sui qui permet à des créateurs de contenu de proposer des contenus et récompenses exclusives à leur communauté, sans intermédiaire, avec des règles d’accès on-chain, du contenu chiffré (Seal) et un score d’engagement calculé off-chain de manière vérifiable (Nautilus).
@@ -196,3 +200,61 @@ CreatorSeal est une dApp Sui qui permet à des créateurs de contenu de proposer
 - Intégration réelle de Seal pour chiffrer / déchiffrer un contenu simple (image/texte).  
 - Démo d’un call Nautilus qui renvoie un score signé permettant de monter de niveau un FanPass.  
 - Un ou deux niveaux de FanPass avec un visuel qui change.
+
+***
+
+Ce README peut être collé sur votre repo et ajusté avec les noms de modules/fonctions exacts au fur et à mesure que vous codez. Si tu veux, on peut maintenant écrire la section “Getting Started” (installation, build, déploiement, commandes) adaptée à ta stack précise.
+
+Sources
+[1] nightly-labs/sui-web3-template - GitHub https://github.com/nightly-labs/sui-web3-template
+[2] sui-foundation/2025-Sui-Hacker-House-template - GitHub https://github.com/sui-foundation/2025-Sui-Hacker-House-template
+[3] App Examples - Sui Documentation https://docs.sui.io/guides/developer/app-examples
+[4] Developer Portal - Build on Sui https://sui.io/developers
+[5] Master SUI Smart Contracts 2024 - Rapid Innovation https://www.rapidinnovation.io/post/create-smart-contract-sui
+[6] Creating and Deploying a Custom Coin on Sui Blockchain Using Move https://blog.stackademic.com/creating-and-deploying-a-custom-coin-on-sui-blockchain-using-move-48d681f30a77
+[7] Build on Sui Blockchain: A Comprehensive Deep Dive for ... https://metaschool.so/articles/build-on-sui-blockchain/
+[8] abhi3700/sui-playground: Everything about Sui blockchain - GitHub https://github.com/abhi3700/sui-playground
+[9] Sui Documentation https://docs.sui.io
+[10] README.md · main · suiCoders / NFT - GitLab https://gitlab.alkimi.org/suicoders/nft/-/blob/main/README.md
+
+
+voici l'architectrure du projet plus ou moins : 
+devinci-sui-stream/
+├── contracts/              # Move sur Sui
+│   ├── Move.toml
+│   └── sources/
+│       ├── streaming.move
+│       ├── donations.move
+│       └── rewards_nft.move
+├── backend/                # Node/TS + IPFS + Seal
+│   ├── src/
+│   │   ├── ipfs/
+│   │   │   ├── ingest.ts         # RTMP → HLS → IPFS
+│   │   │   └── gateway.ts        # Génère les URLs m3u8
+│   │   ├── seal/
+│   │   │   ├── sealClient.ts     # Intégration SDK Seal
+│   │   │   └── policies.ts       # Règles d’accès
+│   │   ├── sui/
+│   │   │   ├── client.ts         # RPC Sui
+│   │   │   └── webhooks.ts       # events / indexation
+│   │   └── api/
+│   │       ├── lives.ts          # API REST/GraphQL pour le front
+│   │       └── users.ts
+│   └── package.json
+└── frontend/              # Next.js/React
+    ├── app/ ou src/
+    │   ├── pages/
+    │   │   ├── index.tsx         # home avec liste de lives
+    │   │   ├── live/[id].tsx     # page live + player
+    │   │   ├── creator/[id].tsx  # profil créateur
+    │   │   └── dashboard.tsx     # stats / config stream
+    │   ├── components/
+    │   │   ├── VideoPlayer.tsx   # lecteur HLS/IPFS
+    │   │   ├── DonatePanel.tsx   # dons en SUI
+    │   │   ├── RewardsPanel.tsx  # progression NFT
+    │   │   └── Layout.tsx
+    │   ├── lib/
+    │   │   ├── suiClient.ts      # connexion wallet / tx
+    │   │   ├── sealClient.ts     # chiffrage côté front si besoin
+    │   │   └── apiClient.ts
+    └── package.json
