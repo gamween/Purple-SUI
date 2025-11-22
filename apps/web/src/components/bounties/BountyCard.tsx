@@ -1,14 +1,19 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
-import { ExternalLink, MessageSquare, TrendingUp, Eye, Edit } from "lucide-react";
+import { MessageSquare, TrendingUp, Eye, Edit } from "lucide-react";
+import { useNotifications } from "../../lib/NotificationContext";
 
 interface BountyCardProps {
   bounty: any;
   userRole: "dev" | "streamer";
+  context?: "marketplace" | "active" | "completed" | "default";
 }
 
-export function BountyCard({ bounty, userRole }: BountyCardProps) {
+export function BountyCard({ bounty, userRole, context = "default" }: BountyCardProps) {
+  const navigate = useNavigate();
+  const { addNotification } = useNotifications();
+
   const statusColors = {
     active: "bg-green-500/10 text-green-400 border-green-500/20",
     pending: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
@@ -23,13 +28,35 @@ export function BountyCard({ bounty, userRole }: BountyCardProps) {
     available: "Disponible",
   };
 
+  const handleShowInterest = () => {
+    // Naviguer vers la messagerie avec le dev
+    navigate(`/streamer/messages?bountyId=${bounty.id}&dev=${bounty.dev}`);
+    
+    // Ajouter une notification pour le dev (simulé côté streamer)
+    addNotification({
+      type: "message",
+      title: "Intérêt exprimé",
+      message: `Vous avez montré votre intérêt pour "${bounty.title}"`,
+      actionUrl: `/streamer/messages?bountyId=${bounty.id}`,
+      metadata: {
+        bountyId: bounty.id,
+        devId: bounty.dev
+      }
+    });
+  };
+
+  const handleViewStats = () => {
+    // Naviguer vers les stats avec le filtre de cette bounty
+    navigate(`/streamer/stats?bountyId=${bounty.id}`);
+  };
+
   return (
     <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 hover:border-slate-700 transition-all group">
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <h3 className="text-white flex-1 mr-2">{bounty.title}</h3>
-        <Badge className={statusColors[bounty.status]}>
-          {statusLabels[bounty.status]}
+        <Badge className={statusColors[bounty.status as keyof typeof statusColors]}>
+          {statusLabels[bounty.status as keyof typeof statusLabels]}
         </Badge>
       </div>
 
@@ -40,10 +67,7 @@ export function BountyCard({ bounty, userRole }: BountyCardProps) {
 
       {/* Avatar & Name */}
       {(bounty.streamer || bounty.dev) && (
-        <Link 
-          to={userRole === "dev" ? "/dev/streamers" : "#"}
-          className="flex items-center gap-2 mb-4 hover:opacity-80 transition-opacity w-fit"
-        >
+        <div className="flex items-center gap-2 mb-4">
           <img
             src={bounty.streamerAvatar || bounty.devAvatar}
             alt=""
@@ -52,7 +76,7 @@ export function BountyCard({ bounty, userRole }: BountyCardProps) {
           <span className="text-slate-300 text-sm">
             {bounty.streamer || bounty.dev}
           </span>
-        </Link>
+        </div>
       )}
 
       {/* Stats */}
@@ -104,23 +128,19 @@ export function BountyCard({ bounty, userRole }: BountyCardProps) {
                 variant="outline"
                 size="sm"
                 className="flex-1 border-slate-700 hover:border-slate-600"
-                asChild
+                onClick={() => navigate(`/dev/bounty/${bounty.id}`)}
               >
-                <Link to={`/dev/bounty/${bounty.id}`}>
-                  <Eye className="w-4 h-4 mr-2" />
-                  Voir détails
-                </Link>
+                <Eye className="w-4 h-4 mr-2" />
+                Voir détails
               </Button>
             )}
             {bounty.streamer && (
               <Button
                 size="sm"
                 className="bg-purple-600 hover:bg-purple-700"
-                asChild
+                onClick={() => navigate("/dev/chat")}
               >
-                <Link to="/dev/chat">
-                  <MessageSquare className="w-4 h-4" />
-                </Link>
+                <MessageSquare className="w-4 h-4" />
               </Button>
             )}
           </>
@@ -130,8 +150,10 @@ export function BountyCard({ bounty, userRole }: BountyCardProps) {
           <Button
             size="sm"
             className="flex-1 bg-purple-600 hover:bg-purple-700"
+            onClick={context === "marketplace" ? () => navigate(`/streamer/bounty/${bounty.id}`) : handleShowInterest}
           >
-            Montrer mon intérêt
+            <MessageSquare className="w-4 h-4 mr-2" />
+            {context === "marketplace" ? "Voir les détails" : "Montrer mon intérêt"}
           </Button>
         )}
 
@@ -140,6 +162,7 @@ export function BountyCard({ bounty, userRole }: BountyCardProps) {
             variant="outline"
             size="sm"
             className="flex-1 border-slate-700 hover:border-slate-600"
+            onClick={handleViewStats}
           >
             <TrendingUp className="w-4 h-4 mr-2" />
             Voir stats

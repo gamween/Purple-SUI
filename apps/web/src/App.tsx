@@ -16,6 +16,10 @@ import DevChat from "./pages/dev/chat";
 import BountyDetail from "./pages/dev/bounty-detail";
 import DevStreamers from "./pages/dev/streamers";
 import StreamerDashboard from "./pages/streamer/dashboard";
+import StreamerBounties from "./pages/streamer/bounties";
+import StreamerMessages from "./pages/streamer/messages";
+import StreamerStats from "./pages/streamer/stats";
+import StreamerBountyDetail from "./pages/streamer/bounty-detail";
 import ViewerBrowse from "./pages/viewer/browse";
 
 export default function App() {
@@ -36,6 +40,10 @@ export default function App() {
           <Route path="/dev/bounty/:id" element={<BountyDetail />} />
           <Route path="/dev/streamers" element={<DevStreamers />} />
           <Route path="/streamer/dashboard" element={<StreamerDashboard />} />
+          <Route path="/streamer/bounties" element={<StreamerBounties />} />
+          <Route path="/streamer/bounty/:id" element={<StreamerBountyDetail />} />
+          <Route path="/streamer/messages" element={<StreamerMessages />} />
+          <Route path="/streamer/stats" element={<StreamerStats />} />
           <Route path="/viewer/browse" element={<ViewerBrowse />} />
         </Routes>
       </BrowserRouter>

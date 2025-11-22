@@ -5,7 +5,7 @@ import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Label } from "../ui/label";
 import { Plus, X, Zap } from "lucide-react";
-import { toast } from "sonner@2.0.3";
+import { toast } from "sonner";
 
 interface CreateBountyModalProps {
   open: boolean;
@@ -82,20 +82,23 @@ export function CreateBountyModal({ open, onClose, onCreate }: CreateBountyModal
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="bg-slate-900 border-slate-800 text-white max-w-2xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-xl">
-            <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center">
-              <Zap className="w-5 h-5 text-purple-400" />
-            </div>
-            Créer une nouvelle bounty
-          </DialogTitle>
-          <DialogDescription className="text-sm text-slate-400">
-            Créez une nouvelle bounty pour encourager les streamers à promouvoir votre projet.
-          </DialogDescription>
-        </DialogHeader>
+      <DialogContent className="bg-slate-900 border-slate-800 text-white max-w-2xl max-h-[80vh] flex flex-col p-0">
+        <div className="px-6 pt-6 pb-4 border-b border-slate-800">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-xl">
+              <div className="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center">
+                <Zap className="w-5 h-5 text-purple-400" />
+              </div>
+              Créer une nouvelle bounty
+            </DialogTitle>
+            <DialogDescription className="text-sm text-slate-400">
+              Créez une nouvelle bounty pour encourager les streamers à promouvoir votre projet.
+            </DialogDescription>
+          </DialogHeader>
+        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6 mt-4">
+        <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0">
+          <div className="flex-1 overflow-y-auto px-6 py-4 space-y-6">
           {/* Title */}
           <div className="space-y-2">
             <Label htmlFor="title" className="text-slate-300">
@@ -227,9 +230,10 @@ export function CreateBountyModal({ open, onClose, onCreate }: CreateBountyModal
               Nombre de jours avant expiration
             </p>
           </div>
+          </div>
 
           {/* Actions */}
-          <div className="flex justify-end gap-3 pt-4 border-t border-slate-800">
+          <div className="flex justify-end gap-3 px-6 py-4 border-t border-slate-800">
             <Button
               type="button"
               variant="outline"
