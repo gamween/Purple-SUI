@@ -219,45 +219,88 @@ Sources
 
 
 voici l'architectrure du projet plus ou moins : 
-devinci-sui-stream/
-├── contracts/              # Move sur Sui
-│   ├── Move.toml
-│   └── sources/
-│       ├── streaming.move
-│       ├── donations.move
-│       └── rewards_nft.move
-├── backend/                # Node/TS + IPFS + Seal
-│   ├── src/
-│   │   ├── ipfs/
-│   │   │   ├── ingest.ts         # RTMP → HLS → IPFS
-│   │   │   └── gateway.ts        # Génère les URLs m3u8
-│   │   ├── seal/
-│   │   │   ├── sealClient.ts     # Intégration SDK Seal
-│   │   │   └── policies.ts       # Règles d’accès
-│   │   ├── sui/
-│   │   │   ├── client.ts         # RPC Sui
-│   │   │   └── webhooks.ts       # events / indexation
-│   │   └── api/
-│   │       ├── lives.ts          # API REST/GraphQL pour le front
-│   │       └── users.ts
-│   └── package.json
-└── frontend/              # Next.js/React
-    ├── app/ ou src/
-    │   ├── pages/
-    │   │   ├── index.tsx         # home avec liste de lives
-    │   │   ├── live/[id].tsx     # page live + player
-    │   │   ├── creator/[id].tsx  # profil créateur
-    │   │   └── dashboard.tsx     # stats / config stream
-    │   ├── components/
-    │   │   ├── VideoPlayer.tsx   # lecteur HLS/IPFS
-    │   │   ├── DonatePanel.tsx   # dons en SUI
-    │   │   ├── RewardsPanel.tsx  # progression NFT
-    │   │   └── Layout.tsx
-    │   ├── lib/
-    │   │   ├── suiClient.ts      # connexion wallet / tx
-    │   │   ├── sealClient.ts     # chiffrage côté front si besoin
-    │   │   └── apiClient.ts
-    └── package.json
+devinci-sui/
+│
+├── contracts/
+│   └── sui-bounties/
+│        ├── Move.toml
+│        ├── sources/
+│        │    ├── bounty.move             # Module principal pour les bounties (création, acceptation, complétion)
+│        │    ├── reward_distribution.move # Gestion des paiements/récompenses automatisés
+│        │    ├── donation.move            # Module donation entre viewers et streamers
+│        │    └── user_registry.move       # Registry des utilisateurs (mapping Twitch/Sui)
+│        └── tests/
+│             ├── bounty_tests.move        # Tests unitaires des fonctions bounties
+│             └── donation_tests.move      # Tests donation
+│
+├── apps/
+│   ├── api/
+│   │    ├── src/
+│   │    │    ├── routes/
+│   │    │    │    ├── auth.routes.ts
+│   │    │    │    ├── bounty.routes.ts
+│   │    │    │    ├── twitch.routes.ts
+│   │    │    │    └── donation.routes.ts
+│   │    │    ├── services/
+│   │    │    │    ├── auth.service.ts
+│   │    │    │    ├── bounty.service.ts
+│   │    │    │    ├── twitch-webhook.service.ts
+│   │    │    │    └── donation.service.ts
+│   │    │    ├── web3/
+│   │    │    │    └── sui-client.ts       # Wrapper SDK Sui
+│   │    │    └── db/
+│   │    │         ├── models.ts
+│   │    │         └── prisma/             # ORM config
+│   │    └── package.json
+│
+│   ├── web/
+│   │    ├── src/
+│   │    │    ├── pages/
+│   │    │    │    ├── index.tsx
+│   │    │    │    ├── dev/
+│   │    │    │    │    └── bounties.tsx   # Vue dédiées aux devs pour poster/voir bounties
+│   │    │    │    └── streamer/
+│   │    │    │         └── dashboard.tsx  # Tableau de bord streamer
+│   │    │    ├── components/
+│   │    │    ├── hooks/
+│   │    │    └── lib/
+│   │    └── package.json
+│
+│   └── twitch-extension/
+│        ├── frontend/
+│        │    ├── viewer.html
+│        │    ├── viewer.js
+│        │    ├── config.html
+│        │    ├── config.js
+│        │    └── styles.css
+│        └── backend/
+│             ├── index.ts
+│             ├── routes/
+│             │    └── donation.routes.ts  # API donation côté extension
+│             └── utils/
+│                  └── twitch-jwt.ts       # Gestion auth Twitch extension
+│        └── package.json
+│
+├── packages/
+│   ├── ui/
+│   │    └── src/
+│   │         ├── components/
+│   │         └── index.ts
+│   ├── core/
+│   │    └── src/
+│   │         ├── types/
+│   │         │    ├── bounty.ts
+│   │         │    └── user.ts
+│   │         ├── utils/
+│   │         └── index.ts
+│   └── web3/
+│        └── src/
+│             ├── suiClient.ts
+│             ├── bounty.ts
+│             └── donation.ts
+│
+├── infra/
+│   ├── docker/
+│   └── k8s/
+└── .vscode/
 
-
-test
