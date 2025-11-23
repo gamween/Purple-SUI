@@ -1,8 +1,9 @@
 'use client';
 
-import { X, Sparkles, Wallet as WalletIcon } from 'lucide-react';
+import { X, Sparkles, Wallet as WalletIcon, Tv } from 'lucide-react';
 import { useZkLogin, SocialProvider } from '../../hooks/useZkLogin';
 import { useSlushWallet } from '../../hooks/useSlushWallet';
+import { useUser } from '../../context/UserContext';
 
 interface ConnectModalProps {
   isOpen: boolean;
@@ -16,6 +17,7 @@ interface ConnectModalProps {
 export function ConnectModal({ isOpen, onClose }: ConnectModalProps) {
   const zkLogin = useZkLogin();
   const { connectSlush, isInstalled } = useSlushWallet();
+  const { isTwitchConnected, twitchData } = useUser();
 
   if (!isOpen) return null;
 
@@ -29,8 +31,31 @@ export function ConnectModal({ isOpen, onClose }: ConnectModalProps) {
     onClose();
   };
 
+  const handleTwitchConnect = () => {
+    const clientId = import.meta.env.VITE_TWITCH_CLIENT_ID;
+    const redirectUri = import.meta.env.VITE_TWITCH_REDIRECT_URI || window.location.origin + '/auth/callback';
+    
+    if (!clientId) {
+      console.error('[ConnectModal] Configuration OAuth Twitch manquante');
+      alert('Configuration Twitch OAuth incomplète. Contactez l\'administrateur.');
+      return;
+    }
+
+    // Construire l'URL d'autorisation Twitch OAuth
+    const authUrl = new URL('https://id.twitch.tv/oauth2/authorize');
+    authUrl.searchParams.set('client_id', clientId);
+    authUrl.searchParams.set('redirect_uri', redirectUri);
+    authUrl.searchParams.set('response_type', 'code');
+    authUrl.searchParams.set('scope', 'user:read:email channel:read:subscriptions');
+
+    console.log('[ConnectModal] Redirection vers Twitch OAuth');
+    
+    // Redirection vers la page d'autorisation Twitch
+    window.location.href = authUrl.toString();
+  };
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in-0 duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in-0 duration-200 overflow-y-auto">
       {/* Overlay */}
       <div 
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
@@ -38,7 +63,7 @@ export function ConnectModal({ isOpen, onClose }: ConnectModalProps) {
       />
 
       {/* Modal Card */}
-      <div className="relative bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 w-full max-w-md animate-in zoom-in-95 duration-200">
+      <div className="relative bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 w-full max-w-md my-8 animate-in zoom-in-95 duration-200">
         {/* Header */}
         <div className="p-6 border-b border-slate-800">
           <div className="flex items-center justify-between">
@@ -173,6 +198,58 @@ export function ConnectModal({ isOpen, onClose }: ConnectModalProps) {
                   </div>
                   <p className="text-xs text-slate-400">
                     Sui Wallet, Slush, Ethos...
+                  </p>
+                </div>
+                <svg className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </button>
+          </div>
+
+          {/* Divider */}
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-slate-800"></div>
+            </div>
+            <div className="relative flex justify-center text-xs">
+              <span className="px-2 bg-slate-900 text-slate-500">ET AUSSI</span>
+            </div>
+          </div>
+
+          {/* Option 3: Twitch pour Streamers */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <Tv className="w-4 h-4 text-purple-400" />
+              <h3 className="text-sm font-semibold text-white uppercase tracking-wide">
+                Compte Twitch
+              </h3>
+              {isTwitchConnected && (
+                <span className="text-xs px-2 py-0.5 bg-green-500/20 text-green-400 rounded-full">
+                  Connecté
+                </span>
+              )}
+            </div>
+
+            <button
+              onClick={handleTwitchConnect}
+              disabled={zkLogin.loading || isTwitchConnected}
+              className="w-full group p-4 bg-gradient-to-r from-purple-600/10 to-purple-700/10 hover:from-purple-600/20 hover:to-purple-700/20 border border-purple-500/30 hover:border-purple-500/50 rounded-xl transition-all hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center">
+                  <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/>
+                  </svg>
+                </div>
+                <div className="flex-1 text-left">
+                  <div className="flex items-center gap-2">
+                    <span className="text-white font-semibold">
+                      {isTwitchConnected && twitchData ? twitchData.username : 'Connecter Twitch'}
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-400">
+                    {isTwitchConnected ? 'Compte Twitch actif' : 'Pour les streamers uniquement'}
                   </p>
                 </div>
                 <svg className="w-5 h-5 text-slate-400 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">

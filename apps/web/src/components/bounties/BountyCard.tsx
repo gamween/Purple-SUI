@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
-import { MessageSquare, TrendingUp, Eye, Edit } from "lucide-react";
+import { MessageSquare, TrendingUp, Eye, Edit, ExternalLink } from "lucide-react";
 import { useNotifications } from "../../lib/NotificationContext";
 
 interface BountyCardProps {
@@ -48,6 +48,15 @@ export function BountyCard({ bounty, userRole, context = "default" }: BountyCard
   const handleViewStats = () => {
     // Naviguer vers les stats avec le filtre de cette bounty
     navigate(`/streamer/stats?bountyId=${bounty.id}`);
+  };
+
+  const handleViewContract = () => {
+    // URL de l'explorateur Sui (testnet ou mainnet)
+    const explorerUrl = bounty.contractId 
+      ? `https://suiscan.xyz/testnet/object/${bounty.contractId}`
+      : `https://suiscan.xyz/testnet/tx/${bounty.transactionHash || ''}`;
+    
+    window.open(explorerUrl, '_blank');
   };
 
   return (
@@ -108,6 +117,19 @@ export function BountyCard({ bounty, userRole, context = "default" }: BountyCard
 
       {/* Duration */}
       <p className="text-slate-500 text-xs mb-4">{bounty.duration}</p>
+
+      {/* View Contract Button - Available for all */}
+      {(bounty.contractId || bounty.transactionHash) && (
+        <Button
+          variant="outline"
+          size="sm"
+          className="w-full mb-3 border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/10"
+          onClick={handleViewContract}
+        >
+          <ExternalLink className="w-4 h-4 mr-2" />
+          View Contract on Blockchain
+        </Button>
+      )}
 
       {/* Actions */}
       <div className="flex gap-2">

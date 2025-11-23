@@ -19,6 +19,8 @@ interface Bounty {
   streamerAvatar?: string;
   donations: number;
   requirements?: string[];
+  contractId?: string;
+  transactionHash?: string;
 }
 
 const initialBounties: Bounty[] = [
@@ -33,6 +35,8 @@ const initialBounties: Bounty[] = [
     streamer: "StreamerPro",
     streamerAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=streamer1",
     donations: 35.5,
+    contractId: "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+    transactionHash: "8xK2mN5pQ9rT3vW7yZ1aB4cD6eF8gH0jL",
   },
   {
     id: "2",
@@ -45,6 +49,8 @@ const initialBounties: Bounty[] = [
     streamer: "GamerElite",
     streamerAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=streamer2",
     donations: 52.3,
+    contractId: "0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890",
+    transactionHash: "3mP5qR7sT9uV1wX3yZ5aB7cD9eF1gH3jK",
   },
   {
     id: "3",
@@ -57,6 +63,8 @@ const initialBounties: Bounty[] = [
     streamer: "CardMasterPro",
     streamerAvatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=cardmaster",
     donations: 145.8,
+    contractId: "0x9876543210fedcba9876543210fedcba9876543210fedcba9876543210fedcba",
+    transactionHash: "7yL9mN1pQ3rT5vW7xZ9aB1cD3eF5gH7jK",
   },
   {
     id: "4",

@@ -19,6 +19,8 @@ interface Bounty {
   category: string;
   donations?: number;
   myShare?: number;
+  contractId?: string;
+  transactionHash?: string;
 }
 
 const marketplaceBounties: Bounty[] = [
@@ -98,6 +100,8 @@ const activeBounties: Bounty[] = [
     category: "Gaming",
     donations: 145.8,
     myShare: 87.5,
+    contractId: "0x5678901234abcdef5678901234abcdef5678901234abcdef5678901234abcdef",
+    transactionHash: "5qT7vW9xZ1aB3cD5eF7gH9jL1mN3pQ5rT",
   },
 ];
 
@@ -115,6 +119,8 @@ const completedBounties: Bounty[] = [
     category: "Gaming",
     donations: 98.5,
     myShare: 78.8,
+    contractId: "0xdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890ab",
+    transactionHash: "9aB1cD3eF5gH7jL9mN1pQ3rT5vW7xZ9aB",
   },
   {
     id: "c2",
@@ -129,6 +135,8 @@ const completedBounties: Bounty[] = [
     category: "Tech",
     donations: 52.3,
     myShare: 39.2,
+    contractId: "0x2345678901abcdef2345678901abcdef2345678901abcdef2345678901abcdef",
+    transactionHash: "1cD3eF5gH7jL9mN1pQ3rT5vW7xZ9aB1cD",
   },
 ];
 

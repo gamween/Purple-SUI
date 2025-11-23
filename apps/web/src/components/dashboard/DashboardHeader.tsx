@@ -217,7 +217,14 @@ export function DashboardHeader({ role }: DashboardHeaderProps) {
                     Mon profil
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="text-slate-300 hover:text-white hover:bg-slate-800">
+                <DropdownMenuItem 
+                  className="text-slate-300 hover:text-white hover:bg-slate-800"
+                  onClick={() => {
+                    // Déclencher l'ouverture de l'extension wallet comme dans ConnectModal
+                    const event = new CustomEvent('open-wallet-modal');
+                    window.dispatchEvent(event);
+                  }}
+                >
                   <Wallet className="w-4 h-4 mr-2" />
                   Gérer wallet
                 </DropdownMenuItem>
