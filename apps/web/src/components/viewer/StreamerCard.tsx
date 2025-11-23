@@ -1,7 +1,8 @@
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
-import { Users, Zap } from "lucide-react";
+import { Users, Zap, ExternalLink, AlertCircle, Gift } from "lucide-react";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
+import { toast } from "sonner";
 
 interface StreamerCardProps {
   streamer: {
@@ -13,10 +14,29 @@ interface StreamerCardProps {
     category: string;
     activeBounties: number;
     thumbnail: string;
+    twitchUsername?: string;
+    twitchUrl?: string;
   };
 }
 
 export function StreamerCard({ streamer }: StreamerCardProps) {
+  const handleWatchStream = () => {
+    if (streamer.isLive && streamer.twitchUrl) {
+      // Ouvrir le stream Twitch dans un nouvel onglet
+      window.open(streamer.twitchUrl, '_blank');
+    } else if (streamer.isLive && !streamer.twitchUrl) {
+      // Le streamer est marqué live mais pas de lien
+      toast.error("Stream temporairement indisponible", {
+        description: "Le streamer n'a pas encore configuré son lien Twitch."
+      });
+    } else {
+      // Le streamer est offline
+      toast.info("Streamer hors ligne", {
+        description: `${streamer.name} n'est pas en stream actuellement.`
+      });
+    }
+  };
+
   return (
     <div className="bg-slate-900/50 border border-slate-800 rounded-xl overflow-hidden hover:border-slate-700 transition-all group">
       {/* Thumbnail */}
@@ -50,6 +70,14 @@ export function StreamerCard({ streamer }: StreamerCardProps) {
           <Zap className="w-3 h-3" />
           {streamer.activeBounties} {streamer.activeBounties > 1 ? "bounties" : "bounty"}
         </div>
+        
+        {/* NFT Rewards indicator */}
+        {streamer.activeBounties > 0 && (
+          <div className="absolute top-2 right-2 flex items-center gap-1 px-2 py-1 bg-gradient-to-r from-yellow-500 to-orange-500 backdrop-blur-sm rounded text-xs text-white font-semibold shadow-lg">
+            <Gift className="w-3 h-3" />
+            NFT
+          </div>
+        )}
       </div>
 
       {/* Content */}
@@ -68,9 +96,19 @@ export function StreamerCard({ streamer }: StreamerCardProps) {
 
         <Button
           className="w-full bg-purple-600 hover:bg-purple-700 group-hover:shadow-lg group-hover:shadow-purple-500/20 transition-all"
-          onClick={() => (window.location.href = `/viewer/${streamer.id}`)}
+          onClick={handleWatchStream}
         >
-          {streamer.isLive ? "Regarder le stream" : "Voir le profil"}
+          {streamer.isLive ? (
+            <>
+              <ExternalLink className="w-4 h-4 mr-2" />
+              Regarder le stream
+            </>
+          ) : (
+            <>
+              <AlertCircle className="w-4 h-4 mr-2" />
+              Hors ligne
+            </>
+          )}
         </Button>
       </div>
     </div>

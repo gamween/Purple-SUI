@@ -14,6 +14,8 @@ const mockStreamers = [
     category: "Valorant",
     activeBounties: 2,
     thumbnail: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&h=225&fit=crop",
+    twitchUsername: "streamerpro",
+    twitchUrl: "https://twitch.tv/streamerpro",
   },
   {
     id: "2",
@@ -24,6 +26,8 @@ const mockStreamers = [
     category: "League of Legends",
     activeBounties: 1,
     thumbnail: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&h=225&fit=crop",
+    twitchUsername: "gamerelite",
+    twitchUrl: "https://twitch.tv/gamerelite",
   },
   {
     id: "3",
@@ -34,6 +38,8 @@ const mockStreamers = [
     category: "Programming",
     activeBounties: 1,
     thumbnail: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400&h=225&fit=crop",
+    twitchUsername: "techstreamer",
+    twitchUrl: "https://twitch.tv/techstreamer",
   },
   {
     id: "4",
@@ -44,6 +50,8 @@ const mockStreamers = [
     category: "Minecraft",
     activeBounties: 3,
     thumbnail: "https://images.unsplash.com/photo-1614294148960-9aa740632a87?w=400&h=225&fit=crop",
+    twitchUsername: "creativeplayer",
+    twitchUrl: "https://twitch.tv/creativeplayer",
   },
 ];
 
@@ -62,7 +70,7 @@ export default function ViewerBrowse() {
           {/* Header */}
           <div>
             <h1 className="text-white mb-2">Streamers avec bounties actifs</h1>
-            <p className="text-slate-400">Soutenez vos streamers favoris et gagnez des NFT rewards</p>
+            <p className="text-slate-400">Soutenez vos streamers favoris et gagnez des NFT rewards exclusifs 🎁</p>
           </div>
 
           {/* Search and Filters */}

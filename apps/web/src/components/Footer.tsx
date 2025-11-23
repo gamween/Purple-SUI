@@ -9,9 +9,9 @@ export function Footer() {
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-cyan-500 rounded-lg flex items-center justify-center">
-                <span className="text-white text-sm font-bold">SB</span>
+                <span className="text-white text-sm font-bold">PS</span>
               </div>
-              <span className="text-white">Sui Bounties</span>
+              <span className="text-white">Purple SUI</span>
             </div>
             <p className="text-sm text-slate-400">
               La première marketplace de bounties streamers sur la blockchain Sui
@@ -103,7 +103,7 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-slate-400">
-            © 2025 Sui Bounties. Tous droits réservés.
+            © 2025 Purple SUI. Tous droits réservés.
           </p>
 
           {/* Social links */}

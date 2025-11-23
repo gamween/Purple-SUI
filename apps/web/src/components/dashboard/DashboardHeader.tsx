@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Bell, User, LogOut, X, Check, MessageSquare, Zap, Coins } from "lucide-react";
+import { Wallet, Bell, User, LogOut, X, Check, MessageSquare, Zap, Coins, Settings, History, Gift, Shield } from "lucide-react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import {
@@ -70,9 +70,9 @@ export function DashboardHeader({ role }: DashboardHeaderProps) {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-cyan-500 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold">SB</span>
+              <span className="text-white font-bold">PS</span>
             </div>
-            <span className="text-xl text-white">Sui Bounties</span>
+            <span className="text-xl text-white">Purple SUI</span>
           </Link>
 
           {/* Right side */}
@@ -185,9 +185,9 @@ export function DashboardHeader({ role }: DashboardHeaderProps) {
                   </div>
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="bg-slate-900 border-slate-800">
-                <div className="px-3 py-2 space-y-1">
-                  <p className="text-sm text-white font-medium">
+              <DropdownMenuContent align="end" className="bg-slate-900 border-slate-800 w-64">
+                <div className="px-3 py-2">
+                  <p className="text-sm text-white font-semibold">
                     {role === "dev" ? "Développeur" : role === "streamer" ? "Streamer" : "Viewer"}
                   </p>
                   <p className="text-xs text-slate-400">
@@ -206,10 +206,60 @@ export function DashboardHeader({ role }: DashboardHeaderProps) {
                   )}
                 </div>
                 <DropdownMenuSeparator className="bg-slate-800" />
-                <DropdownMenuItem className="text-slate-300 hover:text-white hover:bg-slate-800">
-                  <User className="w-4 h-4 mr-2" />
-                  Mon profil
+                
+                {/* Fonctionnalités principales */}
+                <div className="px-3 py-1.5">
+                  <p className="text-xs text-slate-500 font-semibold uppercase tracking-wider">Profil</p>
+                </div>
+                <DropdownMenuItem className="text-slate-300 hover:text-white hover:bg-slate-800" asChild>
+                  <Link to={`/${role}/profile`}>
+                    <User className="w-4 h-4 mr-2" />
+                    Mon profil
+                  </Link>
                 </DropdownMenuItem>
+                <DropdownMenuItem className="text-slate-300 hover:text-white hover:bg-slate-800">
+                  <Wallet className="w-4 h-4 mr-2" />
+                  Gérer wallet
+                </DropdownMenuItem>
+                
+                <DropdownMenuSeparator className="bg-slate-800" />
+                
+                {/* Activité */}
+                <div className="px-3 py-1.5">
+                  <p className="text-xs text-slate-500 font-semibold uppercase tracking-wider">Activité</p>
+                </div>
+                <DropdownMenuItem className="text-slate-300 hover:text-white hover:bg-slate-800" asChild>
+                  <Link to={`/${role}/history`}>
+                    <History className="w-4 h-4 mr-2" />
+                    Historique
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="text-slate-300 hover:text-white hover:bg-slate-800" asChild>
+                  <Link to={`/${role}/nft-rewards`}>
+                    <Gift className="w-4 h-4 mr-2" />
+                    Mes NFT Rewards
+                  </Link>
+                </DropdownMenuItem>
+                
+                <DropdownMenuSeparator className="bg-slate-800" />
+                
+                {/* Paramètres */}
+                <div className="px-3 py-1.5">
+                  <p className="text-xs text-slate-500 font-semibold uppercase tracking-wider">Paramètres</p>
+                </div>
+                <DropdownMenuItem className="text-slate-300 hover:text-white hover:bg-slate-800" asChild>
+                  <Link to={`/${role}/preferences`}>
+                    <Settings className="w-4 h-4 mr-2" />
+                    Préférences
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="text-slate-300 hover:text-white hover:bg-slate-800" asChild>
+                  <Link to={`/${role}/privacy`}>
+                    <Shield className="w-4 h-4 mr-2" />
+                    Confidentialité
+                  </Link>
+                </DropdownMenuItem>
+                
                 <DropdownMenuSeparator className="bg-slate-800" />
                 <DropdownMenuItem
                   className="text-red-400 hover:text-red-300 hover:bg-slate-800"

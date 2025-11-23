@@ -22,6 +22,13 @@ import StreamerStats from "./pages/streamer/stats";
 import StreamerBountyDetail from "./pages/streamer/bounty-detail";
 import ViewerBrowse from "./pages/viewer/browse";
 
+// Profile Pages
+import ProfilePage from "./pages/profile/ProfilePage";
+import HistoryPage from "./pages/profile/HistoryPage";
+import NFTRewardsPage from "./pages/profile/NFTRewardsPage";
+import PreferencesPage from "./pages/profile/PreferencesPage";
+import PrivacyPage from "./pages/profile/PrivacyPage";
+
 export default function App() {
   return (
     <Providers>
@@ -45,6 +52,27 @@ export default function App() {
           <Route path="/streamer/messages" element={<StreamerMessages />} />
           <Route path="/streamer/stats" element={<StreamerStats />} />
           <Route path="/viewer/browse" element={<ViewerBrowse />} />
+          
+          {/* Profile Routes - Dev */}
+          <Route path="/dev/profile" element={<ProfilePage role="dev" />} />
+          <Route path="/dev/history" element={<HistoryPage role="dev" />} />
+          <Route path="/dev/nft-rewards" element={<NFTRewardsPage role="dev" />} />
+          <Route path="/dev/preferences" element={<PreferencesPage role="dev" />} />
+          <Route path="/dev/privacy" element={<PrivacyPage role="dev" />} />
+          
+          {/* Profile Routes - Streamer */}
+          <Route path="/streamer/profile" element={<ProfilePage role="streamer" />} />
+          <Route path="/streamer/history" element={<HistoryPage role="streamer" />} />
+          <Route path="/streamer/nft-rewards" element={<NFTRewardsPage role="streamer" />} />
+          <Route path="/streamer/preferences" element={<PreferencesPage role="streamer" />} />
+          <Route path="/streamer/privacy" element={<PrivacyPage role="streamer" />} />
+          
+          {/* Profile Routes - Viewer */}
+          <Route path="/viewer/profile" element={<ProfilePage role="viewer" />} />
+          <Route path="/viewer/history" element={<HistoryPage role="viewer" />} />
+          <Route path="/viewer/nft-rewards" element={<NFTRewardsPage role="viewer" />} />
+          <Route path="/viewer/preferences" element={<PreferencesPage role="viewer" />} />
+          <Route path="/viewer/privacy" element={<PrivacyPage role="viewer" />} />
         </Routes>
       </BrowserRouter>
     </Providers>
