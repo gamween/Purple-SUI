@@ -1,6 +1,7 @@
 import express, { Request, Response, Router } from 'express';
 import { mintNftToWallet, mintNftBatch, MintNftParams } from '../services/nft-mint.service.js';
 import { checkImageExists, listAvailableImages } from '../utils/ipfs-uploader.js';
+import { getNftsOwnedByAddress } from '../services/nft-fetch.service.js';
 
 const router: Router = express.Router();
 
@@ -152,6 +153,35 @@ router.get('/designs', (_req: Request, res: Response) => {
     return res.status(500).json({
       success: false,
       error: error.message || 'Internal server error',
+    });
+  }
+});
+
+/**
+ * GET /api/nft/owned/:address
+ * Récupérer les NFTs possédés par une adresse Sui
+ */
+router.get('/owned/:address', async (req: Request, res: Response) => {
+  try {
+    const { address } = req.params;
+    
+    if (!address || !address.startsWith('0x')) {
+      return res.status(400).json({ 
+        success: false,
+        error: 'Invalid Sui address' 
+      });
+    }
+
+    const nfts = await getNftsOwnedByAddress(address);
+    return res.status(200).json({ 
+      success: true, 
+      nfts 
+    });
+  } catch (error: any) {
+    console.error('[NFT API] Error in /owned:', error);
+    return res.status(500).json({ 
+      success: false, 
+      error: error.message || 'Failed to fetch NFTs'
     });
   }
 });
