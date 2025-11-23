@@ -1,182 +1,202 @@
-# StreamSUI - NFT Rewards Platform for SUI Ecosystem
+StreamSUI - NFT Rewards Platform for SUI Ecosystem
+📖 Overview
+StreamSUI est une plateforme de streaming décentralisée construite sur la blockchain SUI qui connecte les développeurs de projets SUI (GameFi, dApps) avec des streamers et leurs audiences. Elle automatise la distribution de NFTs aux viewers les plus engagés pour créer un canal marketing authentique et gamifié autour de l'écosystème SUI.
 
-## 📖 Overview
+🎯 Mission
+L'objectif est de transformer le streaming en un outil de croissance pour l'écosystème SUI en permettant aux projets de sponsoriser des streams et de récompenser l'engagement réel des viewers avec des NFTs vérifiables. La plateforme sert aussi de rampe d'onboarding pour de nouveaux utilisateurs SUI de manière organique et engageante.
 
-StreamSUI est une plateforme de streaming décentralisée construite sur la blockchain SUI qui connecte les développeurs de projets SUI (GameFi, dApps) avec des streamers et leurs audiences [11][12]. La plateforme automatise la distribution de NFTs aux viewers les plus engagés, créant un canal marketing authentique et gamifié pour promouvoir l'écosystème SUI [13][14].
+🏗️ Rôles Principaux
+1. Viewer
+Connexion via Slush Wallet avec authentification sociale (zkLogin : Google/Facebook)
 
-## 🎯 Mission
+Consultation de sa collection de NFTs gagnés via la plateforme
 
-Transformer le streaming en un outil de croissance pour l'écosystème SUI en permettant aux projets de sponsoriser des streams et de récompenser l'engagement réel des viewers avec des NFTs vérifiables [15][16]. Notre objectif est d'éduquer et d'onboarder de nouveaux utilisateurs sur SUI de manière organique et engageante [17][18].
+Accès à un classement temps réel des streams sponsorisés les plus populaires
 
-## 🏗️ Architecture - Trois Rôles
+Réception automatique de NFTs basés sur son engagement (temps de visionnage, commentaires, dons)
 
-### 1. **Viewer** 
-- Se connecte via **Slush Wallet** avec authentification Google/Facebook (zkLogin) [19][20][21]
-- Consulte sa collection de NFTs obtenus via la plateforme
-- Accède au classement en temps réel des streams sponsorisés les plus populaires
-- Reçoit automatiquement des NFTs basés sur son engagement (watchtime, commentaires, dons) [22]
+2. Dev (Project Owner)
+Accès à un feed marketplace pour publier des offres de sponsoring de streams
 
-### 2. **Dev (Project Owner)**
-- Accède à un **feed marketplace** pour publier des offres de sponsoring
-- Définit les paramètres de l'offre:
-  - Nombre de NFTs à distribuer (ex: 100 NFTs/heure aux top viewers)
-  - Pourcentage des dons reversé (ex: 30% pour le dev, 70% pour le streamer)
-  - Design personnalisé du NFT
-- Upload le design du NFT qui sera minté pour les viewers éligibles [11][12]
-- Utilise la plateforme comme canal d'acquisition utilisateur à faible coût [23][24]
+Paramétrage des offres :
 
-### 3. **Streamer**
-- Browse le feed des offres de sponsoring disponibles
-- Accepte directement une offre ou négocie via chat intégré avec le dev
-- Une fois l'accord conclu, lance son stream et publie le lien sur StreamSUI
-- Reçoit automatiquement sa part des dons via smart contract [25][26]
+Nombre de NFTs à distribuer (ex: 100 NFTs/heure aux top viewers)
 
-## ⚙️ Fonctionnement Technique
+Pourcentage de dons reversé (ex: 30% pour le dev, 70% pour le streamer)
 
-### Smart Contracts SUI (Move Language)
-- **Marketplace Contract**: gère les offres, accords dev-streamer, et splits de revenus [12][27]
-- **NFT Minting Contract**: crée les NFTs avec métadonnées dynamiques basées sur les scores des viewers [11][12]
-- **Donation Split Contract**: distribue automatiquement les dons selon les termes de l'accord [25]
+Design personnalisé du NFT
 
-### Agent IA + Nautilus
-- **Monitoring en temps réel** du stream (potentiellement via extension Twitch) [28][29]
-- **Collecte de données** d'engagement: watchtime, commentaires, likes, dons [22]
-- **Calcul off-chain vérifiable** des scores via **Nautilus** (Trusted Execution Environment) [30][13]
-- **Attestation cryptographique** soumise on-chain pour validation [13]
-- **Minting automatique** à la fin du stream et distribution aux wallets des viewers éligibles [31][32]
+Upload du design du NFT qui sera minté pour les viewers éligibles
 
-### Système de Donations
-- Extension de paiement inspirée de WaveTip, adaptée à SUI [25]
-- Microtransactions en temps réel avec frais ultra-bas (scalabilité jusqu'à 297,000 TPS) [14][33]
-- Split automatique via smart contract selon l'accord dev-streamer [26]
+Utilisation de StreamSUI comme canal d'acquisition utilisateur à faible coût
 
-### Event System
-- **Webhooks SUI natifs** pour synchroniser blockchain et streaming en temps réel [31][32]
-- Notifications automatiques aux viewers lors de la réception de NFTs
-- Mise à jour du classement des streams en direct
+3. Streamer
+Navigation dans le feed d'offres de sponsoring disponibles
 
-## 🛠️ Stack Technique
+Acceptation directe d'une offre ou négociation via un chat intégré
 
-**Blockchain**: SUI (Move language) [11][12][14]
-**Off-chain Compute**: Nautilus (Verifiable TEE) [30][13]
-**Wallet**: Slush avec zkLogin (Google/Facebook/Twitch) [19][20][21]
-**Smart Contracts**: Move pour NFTs, marketplace, payment splits [12][27]
-**Event Listeners**: SUI native webhooks [31][32]
-**AI Agent**: Monitoring et scoring en temps réel [28][34][22]
+Publication de son stream sur StreamSUI une fois l'accord conclu
 
-## 💡 Cas d'Usage
+Réception automatique de sa part des dons via smart contract
 
-### Promotion GameFi
-Un projet GameFi SUI qui prépare son lancement sponsorise 10 streamers pour 3 streams/semaine pendant 1 mois [35][36]. Les viewers engagés reçoivent des NFTs qui débloquent early access, items in-game, ou whitelist pour l'airdrop [37][38].
+⚙️ Fonctionnement Technique
+Smart Contracts SUI (Move)
+Marketplace Contract : gestion des offres, accords dev–streamer et splits de revenus
 
-### Éducation SUI
-La Sui Foundation sponsorise des streams éducatifs sur les nouveautés de l'écosystème [17][18]. Les viewers assidus reçoivent des NFTs de certification prouvant leur participation et compréhension.
+NFT Minting Contract : mint de NFTs avec métadonnées dynamiques basées sur le score des viewers
 
-### Lancement de dApp
-Une dApp DeFi sur SUI sponsorise des streams de démonstration live [39]. Les NFTs distribués offrent des bonus de staking ou des frais réduits aux early adopters.
+Donation Split Contract : distribution automatique des dons selon les termes de l'accord
 
-## 🚀 Avantages Compétitifs
+Agent IA + Nautilus
+Monitoring en temps réel du stream (potentiellement via extension Twitch)
 
-**Zéro barrière d'entrée pour viewers**: Slush zkLogin permet de créer un wallet SUI en 30 secondes avec un simple compte Google [19][21].
+Collecte des données d'engagement : watchtime, commentaires, likes, dons
 
-**Coût d'acquisition ultra-bas**: Les devs ne paient que le minting (quelques centimes par NFT sur SUI), bien moins cher que la publicité traditionnelle [40][41].
+Calcul off-chain vérifiable des scores via Nautilus (Trusted Execution Environment)
 
-**Pas de frais minimum**: Contrairement aux plateformes traditionnelles, aucun budget minimum n'est requis [42][43].
+Attestation cryptographique soumise on-chain pour validation
 
-**Engagement authentique**: Les NFTs récompensent l'engagement réel (watchtime, participation), pas juste l'achat [44][45].
+Minting automatique en fin de stream et distribution aux wallets éligibles
 
-**Transparence totale**: Smart contracts garantissent la distribution équitable des dons et des NFTs, éliminant les commissions cachées [26][16].
+Système de Donations
+Extension de paiement inspirée de WaveTip, adaptée à SUI
 
-**Scalabilité SUI**: Architecture parallèle et frais bas permettent de distribuer des milliers de NFTs par stream sans congestion [14][33].
+Microtransactions en temps réel avec frais très bas (scalabilité jusqu'à 297,000 TPS)
 
-**Écosystème intégré**: Synergie avec l'écosystème GameFi et DeFi de SUI en pleine expansion (70+ jeux en développement) [46][36][39].
+Split automatique des donations via smart contract selon l'accord dev–streamer
 
-## 🎯 Opportunités de Partenariat
+Event System
+Webhooks SUI natifs pour synchroniser blockchain et streaming en temps réel
 
-**Sui Foundation**: Canal de distribution officiel pour initiatives éducatives et marketing [17][18]
-**Sui Gaming Summit 2025**: Présence au sommet du 18 mars pour capter les projets GameFi [46][47]
-**Projets GameFi**: XOCIETY, Aftermath, et 70+ jeux en développement cherchent des canaux d'acquisition [36][48]
-**DeFi Protocols**: Intégration avec l'écosystème DeFi de SUI pour offres croisées [39]
+Notifications automatiques aux viewers lors de la réception de NFTs
 
-## 📊 Modèle Économique
+Mise à jour dynamique des classements de streams
 
-- **Revenue Viewer**: Gratuit, reçoit des NFTs en récompense
-- **Revenue Streamer**: Pourcentage des dons (70-90% selon accord avec dev)
-- **Revenue Dev**: Acquisition d'utilisateurs qualifiés pour son projet
-- **Revenue Plateforme**: Frais optionnel (2-5%) sur les transactions ou modèle freemium avec features premium
+🛠️ Stack Technique
+Blockchain: SUI (Move language)
+Off-chain Compute: Nautilus (Verifiable TEE)
+Wallet: Slush avec zkLogin (Google/Facebook/Twitch)
+Smart Contracts: Move pour NFTs, marketplace, payment splits
+Event Listeners: SUI native webhooks
+AI Agent: Monitoring et scoring en temps réel
 
-## 🔐 Sécurité & Anti-Fraude
+💡 Cas d'Usage
+Promotion GameFi
+Un projet GameFi SUI qui prépare son lancement sponsorise 10 streamers pour 3 streams/semaine pendant 1 mois. Les viewers engagés reçoivent des NFTs qui débloquent early access, items in-game, ou whitelist pour l'airdrop.
 
-- **Nautilus attestations** garantissent l'authenticité des calculs de score [13]
-- Détection de bots via analyse comportementale dans l'agent IA
-- Smart contracts audités pour sécuriser les donations
-- NFTs soulbound optionnels pour éviter le farming
+Éducation SUI
+La Sui Foundation sponsorise des streams éducatifs sur les nouveautés de l'écosystème. Les viewers assidus reçoivent des NFTs de certification prouvant leur participation et compréhension.
 
-***
+Lancement de dApp
+Une dApp DeFi sur SUI sponsorise des streams de démonstration live. Les NFTs distribués offrent des bonus de staking ou des frais réduits aux early adopters.
 
-**StreamSUI transforme le streaming en un moteur de croissance décentralisé pour l'écosystème SUI, où chaque participant (dev, streamer, viewer) est directement récompensé pour sa contribution authentique** [26][16][24].
+🚀 Avantages Compétitifs
+Zéro barrière d'entrée pour viewers : Slush zkLogin permet de créer un wallet SUI en 30 secondes avec un simple compte Google.
 
+Coût d'acquisition ultra-bas : Les devs ne paient que le minting (quelques centimes par NFT sur SUI), bien moins cher que la publicité traditionnelle.
 
-## 📁 Architecture du Projet
+Pas de frais minimum : Contrairement aux plateformes traditionnelles, aucun budget minimum n'est requis.
 
-```
-devinci/
-│
-├── contracts/                             # Smart Contracts Sui (Move)
-│   ├── Move.toml                          # Configuration package Sui
-│   ├── sources/
-│   │   ├── bounty.move                   # Contrats streamer/dev
-│   │   ├── donation_split.move           # Splits automatiques des donations
-│   │   └── nft_airdrop.move              # Distribution NFTs aux viewers
-│   └── tests/
-│       └── bounty_tests.move             # Tests des smart contracts
-│
-├── apps/
-│   ├── api/                              # Backend Express + TypeScript
-│   │   ├── src/
-│   │   │   ├── routes/                   # API REST
-│   │   │   │   ├── auth.routes.ts        # OAuth Twitch
-│   │   │   │   ├── bounty.routes.ts      # CRUD bounties
-│   │   │   │   ├── donation.routes.ts    # Trigger smart contracts
-│   │   │   │   └── twitch.routes.ts      # Stream info Twitch API
-│   │   │   ├── services/                 # Logique métier
-│   │   │   │   ├── auth.service.ts       # Authentification
-│   │   │   │   ├── bounty.service.ts     # Gestion bounties
-│   │   │   │   ├── donation.service.ts   # Appels SC donation
-│   │   │   │   └── twitch-webhook.service.ts  # Webhooks Twitch
-│   │   │   ├── web3/                     # Intégration blockchain
-│   │   │   │   └── sui-client.ts         # Client Sui SDK
-│   │   │   └── db/                       # Base de données
-│   │   │       └── models.ts             # Mapping Twitch/Sui
-│   │   └── package.json
-│   │
-│   ├── web/                              # Frontend React + Vite
-│   │   ├── src/
-│   │   │   ├── pages/                    # Pages de l'app
-│   │   │   │   ├── LandingPage.tsx       # Page d'accueil
-│   │   │   │   ├── auth/                 # Login/Callback
-│   │   │   │   ├── dev/                  # Dashboard dev + bounties
-│   │   │   │   ├── streamer/             # Dashboard streamer
-│   │   │   │   └── viewer/               # Browse streams
-│   │   │   ├── components/               # Composants React
-│   │   │   │   ├── ui/                   # shadcn/ui (40+ composants)
-│   │   │   │   ├── dashboard/            # Sidebar, Header, Stats
-│   │   │   │   ├── bounties/             # BountyCard
-│   │   │   │   └── viewer/               # StreamerCard
-│   │   │   └── lib/                      # Utilitaires
-│   │   │       ├── networkConfig.ts      # Config réseaux Sui
-│   │   │       └── providers.tsx         # React Query + Sui Provider
-│   │   ├── vite.config.ts
-│   │   └── package.json
-│   │
-│   └── twitch-extension/                 # Extension Twitch (optionnel)
-│       └── package.json
-│
-└── infra/                                # Infrastructure (optionnel)
-    └── docker-compose.yml
+Engagement authentique : Les NFTs récompensent l'engagement réel (watchtime, participation), pas juste l'achat.
 
-# Commandes
-pnpm dev:web      # Lance le frontend (port 3000)
-pnpm dev:api      # Lance le backend (port 3001)
-pnpm build:web    # Build frontend
-```
+Transparence totale : Smart contracts garantissent la distribution équitable des dons et des NFTs, éliminant les commissions cachées.
+
+Scalabilité SUI : Architecture parallèle et frais bas permettent de distribuer des milliers de NFTs par stream sans congestion.
+
+Écosystème intégré : Synergie avec l'écosystème GameFi et DeFi de SUI en pleine expansion (70+ jeux en développement).
+
+🎯 Opportunités de Partenariat
+Sui Foundation : Canal de distribution officiel pour initiatives éducatives et marketing
+Sui Gaming Summit 2025 : Présence au sommet du 18 mars pour capter les projets GameFi
+Projets GameFi : XOCIETY, Aftermath, et 70+ jeux en développement cherchent des canaux d'acquisition
+DeFi Protocols : Intégration avec l'écosystème DeFi de SUI pour offres croisées
+
+📊 Modèle Économique
+Revenue Viewer : Gratuit, reçoit des NFTs en récompense
+
+Revenue Streamer : Pourcentage des dons (70-90% selon accord avec dev)
+
+Revenue Dev : Acquisition d'utilisateurs qualifiés pour son projet
+
+Revenue Plateforme : Frais optionnel (2-5%) sur les transactions ou modèle freemium avec features premium
+
+🔐 Sécurité & Anti-Fraude
+Nautilus attestations garantissent l'authenticité des calculs de score
+
+Détection de bots via analyse comportementale dans l'agent IA
+
+Smart contracts audités pour sécuriser les donations
+
+NFTs soulbound optionnels pour éviter le farming
+
+🧪 Mint & Affichage des NFTs
+Comment mint le n‑ième NFT de test
+Exemple d'appel HTTP pour minter un NFT de test via l'API backend :
+
+bash
+curl -k -X POST https://localhost:3001/api/nft/mint \
+  -H "Content-Type: application/json" \
+  -d '{
+    "imageName": "test.png",
+    "recipientAddress": "0x00…",
+    "name": "Purple SUI NFT #n",
+    "description": "n-ième NFT de test pour Purple SUI"
+  }'
+Paramètres :
+
+imageName : nom de l'image dans ton storage (ou bucket)
+
+recipientAddress : adresse SUI du wallet destinataire
+
+name / description : métadonnées qui seront associées au NFT
+
+Comment récupérer les NFTs du wallet connecté pour les afficher dans le front
+Principe général :
+
+Le frontend envoie une requête POST ou GET à ton backend (ex: /api/nft/by-wallet) avec l'adresse du wallet connecté
+
+Le backend interroge SUI (ou ton indexeur interne) pour récupérer la liste des NFTs associés à cette adresse
+
+Le backend renvoie les métadonnées utiles (image, name, description, tokenId, etc.)
+
+Côté front, un hook React consomme cet endpoint et expose les données au composant
+
+Exemple de hook React :
+
+typescript
+// useWalletNfts.ts
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+export function useWalletNfts(walletAddress: string | undefined) {
+  const [nfts, setNfts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!walletAddress) return;
+    setLoading(true);
+
+    axios
+      .get(`/api/nft/by-wallet`, { params: { address: walletAddress } })
+      .then((res) => setNfts(res.data))
+      .finally(() => setLoading(false));
+  }, [walletAddress]);
+
+  return { nfts, loading };
+}
+Utilisation dans un composant :
+
+tsx
+const { nfts, loading } = useWalletNfts(connectedWalletAddress);
+
+// Puis map sur nfts pour les afficher (card, grid, etc.)
+return (
+  <div>
+    {loading ? <p>Loading NFTs...</p> : (
+      nfts.map(nft => (
+        <NFTCard key={nft.id} {...nft} />
+      ))
+    )}
+  </div>
+);
+StreamSUI transforme le streaming en un moteur de croissance décentralisé pour l'écosystème SUI, où chaque participant (dev, streamer, viewer) est directement récompensé pour sa contribution authentique.
