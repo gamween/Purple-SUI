@@ -1,7 +1,7 @@
-StreamSUI - NFT Rewards Platform for SUI Ecosystem
+Purple SUI - NFT Rewards Platform for SUI Ecosystem
 
 📖 Overview
-StreamSUI est une plateforme de streaming décentralisée construite sur la blockchain SUI qui connecte les développeurs de projets SUI (GameFi, dApps) avec des streamers et leurs audiences.​
+Purple SUI est une plateforme de streaming décentralisée construite sur la blockchain SUI qui connecte les développeurs de projets SUI (GameFi, dApps) avec des streamers et leurs audiences.​
 Elle automatise la distribution de NFTs aux viewers les plus engagés pour créer un canal marketing authentique et gamifié autour de l’écosystème SUI.​
 
 🎯 Mission
@@ -21,13 +21,13 @@ La plateforme sert aussi de rampe d’onboarding pour de nouveaux utilisateurs S
     Nombre de NFTs à distribuer (ex. 100 NFTs / heure aux top viewers).
     Pourcentage de dons reversé (ex. 30% pour le dev, 70% pour le streamer).
     Design personnalisé du NFT.
-Upload du design du NFT qui sera minté pour les viewers éligibles.
-Utilisation de StreamSUI comme canal d’acquisition utilisateur à faible coût.
+  Upload du design du NFT qui sera minté pour les viewers éligibles.
+  Utilisation de Purple SUI comme canal d’acquisition utilisateur à faible coût.
 
 3. Streamer
   Navigation dans le feed d’offres de sponsoring disponibles.
   Acceptation directe d’une offre ou négociation via un chat intégré.
-  Publication de son stream sur StreamSUI une fois l’accord conclu.
+  Publication de son stream sur Purple SUI une fois l’accord conclu.
   Réception automatique de sa part des dons via smart contract.
 
 ⚙️ Fonctionnement technique
@@ -164,4 +164,4 @@ return (
   </div>
 );
           
-StreamSUI transforme le streaming en un moteur de croissance décentralisé pour l’écosystème SUI, où chaque participant (dev, streamer, viewer) est directement récompensé pour sa contribution authentique.​
+Purple SUI transforme le streaming en un moteur de croissance décentralisé pour l’écosystème SUI, où chaque participant (dev, streamer, viewer) est directement récompensé pour sa contribution authentique.​
