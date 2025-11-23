@@ -4,8 +4,10 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Label } from "../ui/label";
-import { Plus, X, Zap } from "lucide-react";
+import { Plus, X, Zap, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { useBounty } from "../../hooks/useBounty";
+import { useCurrentAccount } from "@mysten/dapp-kit";
 
 interface CreateBountyModalProps {
   open: boolean;
@@ -20,9 +22,12 @@ export function CreateBountyModal({ open, onClose, onCreate }: CreateBountyModal
     amount: "",
     split: "70",
     duration: "",
+    streamerAddress: "",
   });
 
   const [requirements, setRequirements] = useState<string[]>([""]);
+  const { createBounty, loading } = useBounty();
+  const currentAccount = useCurrentAccount();
 
   const handleAddRequirement = () => {
     setRequirements([...requirements, ""]);
@@ -40,12 +45,22 @@ export function CreateBountyModal({ open, onClose, onCreate }: CreateBountyModal
     setRequirements(newRequirements);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Validation
     if (!formData.title || !formData.description || !formData.amount || !formData.duration) {
       toast.error("Veuillez remplir tous les champs obligatoires");
+      return;
+    }
+
+    if (!formData.streamerAddress) {
+      toast.error("Veuillez spécifier l'adresse Sui du streamer");
+      return;
+    }
+
+    if (!currentAccount?.address) {
+      toast.error("Veuillez connecter votre wallet Sui");
       return;
     }
 
@@ -55,29 +70,55 @@ export function CreateBountyModal({ open, onClose, onCreate }: CreateBountyModal
       return;
     }
 
-    // Créer la bounty
-    const bounty = {
-      ...formData,
-      requirements: validRequirements,
-    };
-
-    if (onCreate) {
-      onCreate(bounty);
-    }
-
-    toast.success("Bounty créée avec succès !");
+    // Créer la bounty ON-CHAIN
+    const bountyId = Date.now();
     
-    // Reset form
-    setFormData({
-      title: "",
-      description: "",
-      amount: "",
-      split: "70",
-      duration: "",
+    const loadingToast = toast.loading("⛓️ Création de la bounty on-chain...");
+    
+    const result = await createBounty({
+      bountyId,
+      devAddress: currentAccount.address,
+      streamerAddress: formData.streamerAddress,
+      rewardAmountSui: parseFloat(formData.amount),
     });
-    setRequirements([""]);
-    
-    onClose();
+
+    toast.dismiss(loadingToast);
+
+    if (result?.success) {
+      // Créer la bounty localement pour l'affichage
+      const bounty = {
+        ...formData,
+        id: bountyId.toString(),
+        requirements: validRequirements,
+        contractId: result.bountyObjectId,
+        transactionHash: result.digest,
+      };
+
+      if (onCreate) {
+        onCreate(bounty);
+      }
+
+      toast.success("🎉 Bounty créée on-chain avec succès !", {
+        description: `Transaction: ${result.digest?.slice(0, 20)}...`,
+      });
+      
+      // Reset form
+      setFormData({
+        title: "",
+        description: "",
+        amount: "",
+        split: "70",
+        duration: "",
+        streamerAddress: "",
+      });
+      setRequirements([""]);
+      
+      onClose();
+    } else {
+      toast.error("❌ Échec création bounty", {
+        description: result?.error || "Erreur inconnue",
+      });
+    }
   };
 
   return (
@@ -178,6 +219,23 @@ export function CreateBountyModal({ open, onClose, onCreate }: CreateBountyModal
             </p>
           </div>
 
+          {/* Streamer Address */}
+          <div className="space-y-2">
+            <Label htmlFor="streamerAddress" className="text-slate-300">
+              Adresse Sui du streamer *
+            </Label>
+            <Input
+              id="streamerAddress"
+              placeholder="0x..."
+              value={formData.streamerAddress}
+              onChange={(e) => setFormData({ ...formData, streamerAddress: e.target.value })}
+              className="bg-slate-800 border-slate-700 text-white placeholder:text-slate-500 font-mono text-sm"
+            />
+            <p className="text-slate-500 text-xs">
+              L'adresse Sui wallet du streamer qui recevra la bounty
+            </p>
+          </div>
+
           {/* Amount and Split */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
@@ -187,6 +245,8 @@ export function CreateBountyModal({ open, onClose, onCreate }: CreateBountyModal
               <Input
                 id="amount"
                 type="number"
+                step="0.1"
+                min="0.1"
                 placeholder="100"
                 value={formData.amount}
                 onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
@@ -238,15 +298,24 @@ export function CreateBountyModal({ open, onClose, onCreate }: CreateBountyModal
               type="button"
               variant="outline"
               onClick={onClose}
+              disabled={loading}
               className="border-slate-700 text-slate-300 hover:bg-slate-800"
             >
               Annuler
             </Button>
             <Button
               type="submit"
-              className="bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700"
+              disabled={loading}
+              className="bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-700 hover:to-cyan-700 gap-2"
             >
-              Créer la bounty
+              {loading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Création on-chain...
+                </>
+              ) : (
+                "Créer la bounty"
+              )}
             </Button>
           </div>
         </form>

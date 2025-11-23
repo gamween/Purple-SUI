@@ -3,8 +3,9 @@ module creator_seal::bounty {
     use sui::sui::SUI;
     use sui::event;
 
-    public struct Bounty has store {
-        id: u64, // u64 unique, pas UID
+    public struct Bounty has key, store {
+        id: UID,
+        bounty_id: u64, // ID métier pour référence frontend
         dev: address,
         streamer: address,
         reward: u64,
@@ -24,15 +25,22 @@ module creator_seal::bounty {
 
     /// Crée un bounty
     public fun create_bounty(
-        id: u64,
+        bounty_id: u64,
         dev: address,
         streamer: address,
         reward: Coin<SUI>,
-        _ctx: &mut sui::tx_context::TxContext
+        ctx: &mut TxContext
     ): Bounty {
         let amount = value(&reward);
         sui::transfer::public_transfer(reward, dev);
-        Bounty { id, dev, streamer, reward: amount, state: 0 }
+        Bounty { 
+            id: object::new(ctx),
+            bounty_id, 
+            dev, 
+            streamer, 
+            reward: amount, 
+            state: 0 
+        }
     }
 
     /// Accepte un bounty
@@ -43,7 +51,7 @@ module creator_seal::bounty {
         assert!(bounty.streamer == streamer, 1);
         bounty.state = 1;
         event::emit(BountyAcceptedEvent {
-            bounty_id: bounty.id,
+            bounty_id: bounty.bounty_id,
             streamer
         });
     }
@@ -63,7 +71,7 @@ module creator_seal::bounty {
         let reward_coin = split(coin_vault, bounty.reward, _ctx);
         sui::transfer::public_transfer(reward_coin, streamer);
         event::emit(BountyCompletedEvent {
-            bounty_id: bounty.id,
+            bounty_id: bounty.bounty_id,
             dev,
             streamer
         });

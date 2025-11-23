@@ -6,13 +6,15 @@ import { fileURLToPath } from 'url';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import twitchRouter from './routes/twitch.routes';
+import bountyRouter from './routes/bounty.routes';
+import { verifySuiConfig } from './web3/sui-client';
 
 // Obtenir __dirname en ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Charger les variables d'environnement
-dotenv.config();
+// Charger les variables d'environnement depuis la racine du projet API
+dotenv.config({ path: path.join(__dirname, '..', '.env') });
 
 const app: Express = express();
 const PORT = process.env.PORT || 3001;
@@ -60,6 +62,9 @@ app.get('/health', (_req: Request, res: Response) => {
 // Twitch OAuth routes
 app.use('/api/twitch', twitchRouter);
 
+// Bounty blockchain routes
+app.use('/api/bounty', bountyRouter);
+
 // Route 404
 app.use((req: Request, res: Response) => {
   res.status(404).json({
@@ -82,6 +87,20 @@ app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
 });
 
 // ========================================
+// SUI BLOCKCHAIN INITIALIZATION
+// ========================================
+
+// Vérifier la configuration Sui au démarrage
+verifySuiConfig()
+  .then(() => {
+    console.log('[Sui] ✅ Configuration blockchain validée');
+  })
+  .catch((error) => {
+    console.error('[Sui] ⚠️  Erreur configuration blockchain:', error.message);
+    console.warn('[Sui] ⚠️  Les routes blockchain seront disponibles mais pourraient échouer');
+  });
+
+// ========================================
 // SERVER START
 // ========================================
 
@@ -102,7 +121,8 @@ if (process.env.NODE_ENV !== 'production') {
       console.log('========================================');
       console.log(`📡 Server running on: https://localhost:${PORT}`);
       console.log(`🌍 Frontend URL: ${process.env.FRONTEND_URL}`);
-      console.log(`🎮 Twitch OAuth callback: https://localhost:${PORT}/api/twitch/callback`);
+      console.log(`🎮 Twitch OAuth: /api/twitch/callback`);
+      console.log(`⛓️  Bounty API: /api/bounty`);
       console.log(`⚙️  Environment: ${process.env.NODE_ENV || 'development'}`);
       console.log('========================================');
     });
