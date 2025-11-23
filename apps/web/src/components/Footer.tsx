@@ -7,11 +7,13 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           {/* Brand */}
           <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-cyan-500 rounded-lg flex items-center justify-center">
-                <span className="text-white text-sm font-bold">PS</span>
-              </div>
-              <span className="text-white">Purple SUI</span>
+            <div className="flex items-center gap-3">
+              <img 
+                src="/logo.png" 
+                alt="Purple SUI Logo" 
+                className="w-8 h-8 rounded-lg"
+              />
+              <span className="text-white font-semibold">Purple SUI</span>
             </div>
             <p className="text-sm text-slate-400">
               La première marketplace de bounties streamers sur la blockchain Sui

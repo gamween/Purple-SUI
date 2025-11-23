@@ -32,11 +32,19 @@ export default function TwitchCallbackPage() {
       return;
     }
 
-    const navigateToRole = () => {
-      if (userRole === "dev") navigate("/dev");
-      else if (userRole === "streamer") navigate("/streamer");
-      else if (userRole === "viewer") navigate("/viewer");
-      else navigate("/role-selection");
+    const navigateToReturn = () => {
+      // Récupérer l'URL de retour sauvegardée
+      const returnUrl = sessionStorage.getItem('twitch_return_url');
+      sessionStorage.removeItem('twitch_return_url');
+      
+      if (returnUrl && returnUrl !== '/auth/twitch/callback') {
+        console.log('[TwitchCallback] Retour à l\'URL d\'origine:', returnUrl);
+        navigate(returnUrl, { replace: true });
+      } else {
+        // Par défaut, aller à la landing page
+        console.log('[TwitchCallback] Aucune URL de retour, redirection vers la page d\'accueil');
+        navigate('/', { replace: true });
+      }
     };
 
     const fetchUserInfo = async (token: string) => {
@@ -68,31 +76,20 @@ export default function TwitchCallbackPage() {
         setStatus("error");
         setErrorMessage(err instanceof Error ? err.message : "Erreur Twitch");
       } finally {
-        navigateToRole();
+        navigateToReturn();
       }
     };
 
-    // In dev: simulate and navigate immediately
-    if (isDev) {
-      try {
-        connectTwitch({ username: "dev_twitch", userId: "dev_1" });
-        setStatus("success");
-      } catch (e) {
-        console.error(e);
-      } finally {
-        navigateToRole();
-      }
-      return;
-    }
-
-    // If there's a token, fetch user info, otherwise just navigate
+    // If there's a token, fetch user info, otherwise navigate
     if (accessToken) {
+      console.log('[TwitchCallback] Token reçu, récupération des infos utilisateur...');
       fetchUserInfo(accessToken);
     } else {
+      console.warn('[TwitchCallback] Aucun access_token trouvé dans le hash. Hash:', hash);
       // No token: navigate without blocking the user
-      navigateToRole();
+      navigateToReturn();
     }
-  }, [searchParams, connectTwitch, userRole, suiAddress, navigate]);
+  }, [searchParams, connectTwitch, userRole, navigate]);
 
   if (status === "error") {
     return (

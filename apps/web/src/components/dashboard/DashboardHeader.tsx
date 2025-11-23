@@ -68,11 +68,13 @@ export function DashboardHeader({ role }: DashboardHeaderProps) {
         <div className="px-6 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-cyan-500 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold">PS</span>
-            </div>
-            <span className="text-xl text-white">Purple SUI</span>
+          <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+            <img 
+              src="/logo.png" 
+              alt="Purple SUI Logo" 
+              className="w-10 h-10 rounded-lg"
+            />
+            <span className="text-xl font-semibold text-white">Purple SUI</span>
           </Link>
 
           {/* Right side */}

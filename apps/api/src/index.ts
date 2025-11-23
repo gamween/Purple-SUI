@@ -7,6 +7,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import twitchRouter from './routes/twitch.routes';
 import bountyRouter from './routes/bounty.routes';
+import nftRouter from './routes/nft.routes';
 import { verifySuiConfig } from './web3/sui-client';
 
 // Obtenir __dirname en ES modules
@@ -64,6 +65,9 @@ app.use('/api/twitch', twitchRouter);
 
 // Bounty blockchain routes
 app.use('/api/bounty', bountyRouter);
+
+// NFT minting routes
+app.use('/api/nft', nftRouter);
 
 // Route 404
 app.use((req: Request, res: Response) => {
@@ -123,6 +127,7 @@ if (process.env.NODE_ENV !== 'production') {
       console.log(`🌍 Frontend URL: ${process.env.FRONTEND_URL}`);
       console.log(`🎮 Twitch OAuth: /api/twitch/callback`);
       console.log(`⛓️  Bounty API: /api/bounty`);
+      console.log(`🎨 NFT Mint API: /api/nft/mint`);
       console.log(`⚙️  Environment: ${process.env.NODE_ENV || 'development'}`);
       console.log('========================================');
     });
