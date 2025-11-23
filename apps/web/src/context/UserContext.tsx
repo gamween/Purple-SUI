@@ -68,8 +68,15 @@ export function UserProvider({ children }: { children: ReactNode }) {
       const storedTwitch = localStorage.getItem(TWITCH_STORAGE_KEY);
       if (storedTwitch) {
         const twitch = JSON.parse(storedTwitch);
-        setTwitchData(twitch);
-        console.log('[UserContext] Session Twitch restaurée:', { username: twitch.username });
+        
+        // Nettoyer les anciennes sessions mock de développement
+        if (twitch.username === 'dev_twitch' || twitch.userId === 'dev_1') {
+          console.warn('[UserContext] Session mock détectée, nettoyage...');
+          localStorage.removeItem(TWITCH_STORAGE_KEY);
+        } else {
+          setTwitchData(twitch);
+          console.log('[UserContext] Session Twitch restaurée:', { username: twitch.username });
+        }
       }
 
       // Restaurer rôle

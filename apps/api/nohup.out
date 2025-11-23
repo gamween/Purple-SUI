@@ -1,0 +1,20 @@
+
+> api@0.1.0 dev /Users/fianso/Development/sui/devinci/apps/api
+> tsx watch src/index.ts
+
+[Sui] 🔍 Vérification de la configuration...
+========================================
+🚀 StreamSUI API Server (HTTPS)
+========================================
+📡 Server running on: https://localhost:3001
+🌍 Frontend URL: https://localhost:3000
+🎮 Twitch OAuth: /api/twitch/callback
+⛓️  Bounty API: /api/bounty
+🎨 NFT Mint API: /api/nft/mint
+⚙️  Environment: development
+========================================
+[Sui] ✅ Connecté à la blockchain, Chain ID: 4c78adac
+[Sui] ✅ Adresse wallet: 0xca1f1d74a4f38335c52a45762004670c2410c0afd2b516e46bd2713b21abd946
+[Sui] 💰 Solde: 3.8961 SUI
+[Sui] ✅ Package ID: 0x2391a973ee59f0a85a4ce3feed873edb1b697e9abe53f56a3debe23ecc3639e5
+[Sui] ✅ Configuration blockchain validée

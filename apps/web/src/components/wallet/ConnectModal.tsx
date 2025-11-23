@@ -35,22 +35,26 @@ export function ConnectModal({ isOpen, onClose }: ConnectModalProps) {
 
   const handleTwitchConnect = () => {
     const clientId = import.meta.env.VITE_TWITCH_CLIENT_ID;
-    const redirectUri = import.meta.env.VITE_TWITCH_REDIRECT_URI || window.location.origin + '/auth/callback';
+    const redirectUri = import.meta.env.VITE_TWITCH_REDIRECT_URI;
     
-    if (!clientId) {
-      console.error('[ConnectModal] Configuration OAuth Twitch manquante');
-      alert('Configuration Twitch OAuth incomplète. Contactez l\'administrateur.');
+    if (!clientId || !redirectUri) {
+      console.error('[ConnectModal] Configuration OAuth Twitch manquante:', { clientId: !!clientId, redirectUri: !!redirectUri });
+      alert('Configuration Twitch OAuth incomplète. Vérifiez votre .env.local');
       return;
     }
 
-    // Construire l'URL d'autorisation Twitch OAuth
+    // Sauvegarder l'URL actuelle pour y retourner après l'authentification
+    sessionStorage.setItem('twitch_return_url', window.location.pathname + window.location.search);
+    console.log('[ConnectModal] URL de retour sauvegardée:', window.location.pathname);
+
+    // Construire l'URL d'autorisation Twitch OAuth (Implicit Flow)
     const authUrl = new URL('https://id.twitch.tv/oauth2/authorize');
     authUrl.searchParams.set('client_id', clientId);
-    authUrl.searchParams.set('redirect_uri', redirectUri);
-    authUrl.searchParams.set('response_type', 'code');
-    authUrl.searchParams.set('scope', 'user:read:email channel:read:subscriptions');
+    authUrl.searchParams.set('redirect_uri', redirectUri); // Frontend: https://localhost:3000/auth/twitch/callback
+    authUrl.searchParams.set('response_type', 'token'); // ← IMPLICIT FLOW (pas de Client Secret requis)
+    authUrl.searchParams.set('scope', 'user:read:email');
 
-    console.log('[ConnectModal] Redirection vers Twitch OAuth');
+    console.log('[ConnectModal] Redirection vers Twitch OAuth (Implicit Flow):', authUrl.toString());
     
     // Redirection vers la page d'autorisation Twitch
     window.location.href = authUrl.toString();

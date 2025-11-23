@@ -12,11 +12,13 @@ export function Header() {
       <div className="max-w-7xl mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <a href="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-cyan-500 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold">PS</span>
-            </div>
-            <span className="text-xl text-white">Purple SUI</span>
+          <a href="/" className="flex items-center gap-3">
+            <img 
+              src="/logo.png" 
+              alt="Purple SUI Logo" 
+              className="w-10 h-10 rounded-lg"
+            />
+            <span className="text-xl font-semibold text-white">Purple SUI</span>
           </a>
 
           {/* Auth Buttons */}

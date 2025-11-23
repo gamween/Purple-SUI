@@ -21,6 +21,10 @@ export function TwitchButton() {
       return;
     }
 
+    // Sauvegarder l'URL actuelle pour y retourner après l'authentification
+    sessionStorage.setItem('twitch_return_url', window.location.pathname + window.location.search);
+    console.log('[TwitchButton] URL de retour sauvegardée:', window.location.pathname);
+
     // Implicit Flow OAuth : response_type=token (pas besoin de backend)
     // Le token sera retourné directement dans l'URL fragment (#)
     const authUrl = new URL('https://id.twitch.tv/oauth2/authorize');
