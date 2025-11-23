@@ -6,18 +6,15 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-# Next.js
-.next/
-out/
-build/
+# Build outputs
 dist/
+build/
 
 # Environment variables
 .env
 .env.local
-.env.development.local
-.env.test.local
-.env.production.local
+apps/api/.env
+apps/web/.env.local
 
 # Runtime data
 pids
@@ -25,24 +22,15 @@ pids
 *.seed
 *.pid.lock
 
-# Coverage directory used by tools like istanbul
+# Coverage
 coverage/
 *.lcov
 
-# nyc test coverage
-.nyc_output
-
-# Dependency directories
-jspm_packages/
-
-# Optional npm cache directory
+# Optional caches
 .npm
-
-# Optional eslint cache
 .eslintcache
-
-# Optional REPL history
 .node_repl_history
+.cache
 
 # Output of 'npm pack'
 *.tgz
@@ -50,42 +38,14 @@ jspm_packages/
 # Yarn Integrity file
 .yarn-integrity
 
-# parcel-bundler cache (https://parceljs.org/)
-.cache
-.parcel-cache
-
-# next.js build output
-.next
-
-# nuxt.js build output
-.nuxt
-
-# vuepress build output
-.vuepress/dist
-
-# Serverless directories
-.serverless
-
-# FuseBox cache
-.fusebox/
-
-# DynamoDB Local files
-.dynamodb/
-
-# TernJS port file
-.tern-port
-
-# Stores VSCode versions used for testing VSCode extensions
-.vscode-test
-
-# IDE files
+# IDE
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
 
-# OS generated files
+# OS
 .DS_Store
 .DS_Store?
 ._*
@@ -98,11 +58,7 @@ Thumbs.db
 logs
 *.log
 
-# Temporary folders
-tmp/
-temp/
-
-# TypeScript cache
+# TypeScript
 *.tsbuildinfo
 
 # Vercel
