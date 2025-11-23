@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useUser } from "../../context/UserContext";
 import { DashboardHeader } from "../../components/dashboard/DashboardHeader";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
@@ -21,6 +22,15 @@ export default function ProfilePage({ role }: ProfilePageProps) {
     walletAddress: "0x7a8f...9b3c",
     avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=user123",
   });
+
+  // Remplir automatiquement l'adresse du wallet depuis le contexte utilisateur (Slush ou autre)
+  const { suiAddress } = useUser();
+
+  useEffect(() => {
+    if (suiAddress) {
+      setProfile((p) => ({ ...p, walletAddress: suiAddress }));
+    }
+  }, [suiAddress]);
 
   const handleSave = () => {
     toast.success("Profil mis à jour avec succès!");

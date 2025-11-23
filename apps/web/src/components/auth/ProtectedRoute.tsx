@@ -3,7 +3,6 @@
 import { ReactNode } from 'react';
 import { useUser } from '../../context/UserContext';
 import { WalletButton } from '../wallet/WalletButton';
-import { TwitchButton } from '../twitch/TwitchButton';
 import { Shield, Sparkles } from 'lucide-react';
 
 type UserRole = 'dev' | 'streamer' | 'viewer';
@@ -24,10 +23,9 @@ interface ProtectedRouteProps {
 export function ProtectedRoute({ 
   children, 
   message = "Connectez votre wallet pour accéder à cette page",
-  requireTwitch = false,
   allowedRoles
 }: ProtectedRouteProps) {
-  const { isConnected, isTwitchConnected, userRole } = useUser();
+  const { isConnected, userRole } = useUser();
 
   // Vérification 1 : Connexion wallet requise (toujours)
   if (!isConnected) {
@@ -102,50 +100,7 @@ export function ProtectedRoute({
     );
   }
 
-  // Vérification 3 : Connexion Twitch requise (selon requireTwitch)
-  if (requireTwitch && !isTwitchConnected) {
-    const roleMessage = userRole === 'streamer' 
-      ? 'En tant que streamer, vous devez connecter votre compte Twitch pour accepter des bounties et streamer.'
-      : userRole === 'viewer'
-      ? 'En tant que viewer, vous devez connecter votre compte Twitch pour recevoir des NFTs basés sur votre engagement.'
-      : 'Cette fonctionnalité nécessite une connexion Twitch.';
-
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-4">
-        <div className="text-center space-y-6 p-12 bg-purple-500/5 border border-purple-500/20 rounded-2xl backdrop-blur max-w-md w-full">
-          {/* Twitch Icon */}
-          <div className="relative mx-auto w-24 h-24">
-            <div className="absolute inset-0 bg-purple-500 rounded-full blur-xl opacity-30 animate-pulse" />
-            <div className="relative w-24 h-24 bg-purple-500/20 border-2 border-purple-400 rounded-full flex items-center justify-center">
-              <svg className="w-12 h-12 text-purple-400" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/>
-              </svg>
-            </div>
-          </div>
-
-          {/* Content */}
-          <div className="space-y-3">
-            <h1 className="text-3xl font-bold text-white">Connexion Twitch Requise</h1>
-            <p className="text-slate-300 leading-relaxed">
-              {roleMessage}
-            </p>
-          </div>
-
-          {/* Twitch Button */}
-          <div className="pt-4">
-            <TwitchButton />
-          </div>
-
-          {/* Info */}
-          <div className="pt-6 border-t border-slate-800">
-            <p className="text-xs text-slate-400">
-              💜 Connexion sécurisée via Twitch OAuth
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // NOTE: Twitch requirement removed — do not block routes based on Twitch connection.
 
   // Toutes les vérifications passées : afficher le contenu
   return <>{children}</>;

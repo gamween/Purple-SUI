@@ -5,6 +5,8 @@ import { StatsCard } from "../../components/dashboard/StatsCard";
 import { BountyCard } from "../../components/bounties/BountyCard";
 import { Coins, Award, TrendingUp, Search } from "lucide-react";
 import { Input } from "../../components/ui/input";
+import { Button } from "../../components/ui/button";
+import { toast } from "sonner";
 
 interface Bounty {
   id: string;
@@ -86,7 +88,7 @@ const marketplaceBounties: Bounty[] = [
   },
 ];
 
-const activeBounties: Bounty[] = [
+const defaultActiveBounties: Bounty[] = [
   {
     id: "a1",
     title: "Tournoi sponsorisé Primacy - TCG Sui",
@@ -144,6 +146,49 @@ export default function StreamerBounties() {
   const [activeTab, setActiveTab] = useState<"marketplace" | "active" | "completed">("marketplace");
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  const [activeBounties, setActiveBounties] = useState<Bounty[]>(() => {
+    try {
+      const stored = localStorage.getItem("activeBounties");
+      const parsed = stored ? JSON.parse(stored) : [];
+      // Merge defaults with persisted (persisted first so newest appear first)
+      return [...parsed, ...defaultActiveBounties];
+    } catch (e) {
+      return [...defaultActiveBounties];
+    }
+  });
+
+  const clearPersistedBounties = () => {
+    try {
+      localStorage.removeItem("activeBounties");
+      setActiveBounties([...defaultActiveBounties]);
+      toast.success("Les bounties acceptées persistées ont été supprimées.");
+    } catch (e) {
+      toast.error("Impossible de supprimer les bounties persistées.");
+    }
+  };
+
+  const removeLastPersisted = (count = 2) => {
+    try {
+      const stored = localStorage.getItem("activeBounties");
+      if (!stored) {
+        toast.error("Aucune bounty persistée trouvée.");
+        return;
+      }
+      const parsed = JSON.parse(stored);
+      if (!Array.isArray(parsed) || parsed.length === 0) {
+        toast.error("Aucune bounty persistée trouvée.");
+        return;
+      }
+
+      const removed = parsed.slice(0, Math.min(count, parsed.length));
+      const remaining = parsed.slice(removed.length);
+      localStorage.setItem("activeBounties", JSON.stringify(remaining));
+      setActiveBounties([...remaining, ...defaultActiveBounties]);
+      toast.success(`${removed.length} bounty(ies) persistée(s) supprimée(s)`);
+    } catch (e) {
+      toast.error("Impossible de supprimer les bounties persistées.");
+    }
+  };
 
   const stats = {
     activeBounties: activeBounties.length,
@@ -182,9 +227,19 @@ export default function StreamerBounties() {
         <main className="flex-1 p-8">
           <div className="max-w-7xl mx-auto space-y-8">
             {/* Header */}
-            <div>
-              <h1 className="text-white mb-2">Bounties & Opportunités</h1>
-              <p className="text-slate-400">Trouvez des sponsorships et gérez vos collaborations</p>
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-white mb-2">Bounties & Opportunités</h1>
+                <p className="text-slate-400">Trouvez des sponsorships et gérez vos collaborations</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button size="sm" variant="ghost" onClick={clearPersistedBounties} className="text-slate-300">
+                  Supprimer bounties acceptées
+                </Button>
+                <Button size="sm" variant="ghost" onClick={() => removeLastPersisted(2)} className="text-slate-300">
+                  Supprimer 2 derniers
+                </Button>
+              </div>
             </div>
 
             {/* Stats KPIs */}

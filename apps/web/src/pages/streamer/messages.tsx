@@ -212,7 +212,14 @@ export default function StreamerMessages() {
   const [selectedConv, setSelectedConv] = useState<string>("1");
   const [messageText, setMessageText] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-  const [messages, setMessages] = useState<Record<string, Message[]>>(conversationMessages);
+  const [messages, setMessages] = useState<Record<string, Message[]>>(() => {
+    try {
+      const stored = localStorage.getItem("messages_state");
+      return stored ? JSON.parse(stored) : conversationMessages;
+    } catch (e) {
+      return conversationMessages;
+    }
+  });
   const [searchParams] = useSearchParams();
   const { addNotification } = useNotifications();
 
@@ -267,6 +274,37 @@ export default function StreamerMessages() {
         devId: selectedConversation?.dev
       }
     });
+
+    // Ajouter la bounty acceptée dans le stockage local pour qu'elle apparaisse
+    // dans la page "Mes Bounties" (streamer/bounties.tsx lira ce storage au montage)
+    try {
+      const stored = localStorage.getItem("activeBounties");
+      const parsed = stored ? JSON.parse(stored) : [];
+
+      // Avoid duplicates: check if an entry from this messageId already exists
+      const exists = parsed.some((p: any) => p?.sourceMessageId === messageId);
+      if (!exists) {
+        const newBounty = {
+          id: `accepted-${messageId}-${Date.now()}`,
+          title: message?.bountyOffer?.title || "Bounty",
+          description: message?.bountyOffer?.description || "",
+          amount: Number(message?.bountyOffer?.amount || 0),
+          split: Number(message?.bountyOffer?.split || 0),
+          duration: `${message?.bountyOffer?.duration || "0"} jours restants`,
+          status: "active",
+          dev: selectedConversation?.dev || "",
+          devAvatar: selectedConversation?.avatar || "",
+          category: "Gaming",
+          // track origin so we can avoid duplicates across sessions
+          sourceMessageId: messageId,
+        };
+
+        parsed.unshift(newBounty);
+        localStorage.setItem("activeBounties", JSON.stringify(parsed));
+      }
+    } catch (e) {
+      // ignore storage errors
+    }
 
     toast.success("✅ Bounty acceptée ! Elle a été ajoutée à vos bounties actives.");
     
@@ -337,6 +375,15 @@ export default function StreamerMessages() {
       setSelectedConv(convId);
     }
   }, [searchParams]);
+
+  // Persist messages state so accepted/rejected offers survive reloads
+  useEffect(() => {
+    try {
+      localStorage.setItem("messages_state", JSON.stringify(messages));
+    } catch (e) {
+      // ignore storage errors
+    }
+  }, [messages]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">

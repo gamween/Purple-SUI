@@ -47,7 +47,7 @@ export function WalletButton() {
       <div className="relative">
         <button
           onClick={() => setShowDropdown(!showDropdown)}
-          className="flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-green-500/20 hover:bg-green-500/20 rounded-lg transition-all"
+          className="flex items-center gap-2 px-6 py-2 bg-green-500/10 border border-green-500/20 hover:bg-green-500/20 rounded-lg transition-all"
         >
           <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
           <span className="text-sm text-green-400 font-medium">
