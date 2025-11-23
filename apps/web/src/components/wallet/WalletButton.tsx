@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Wallet, LogOut, ChevronDown } from 'lucide-react';
 import { useUser } from '../../context/UserContext';
 import { useDisconnectWallet } from '@mysten/dapp-kit';
@@ -14,6 +15,7 @@ import { ConnectModal } from './ConnectModal';
 export function WalletButton() {
   const { isConnected, suiAddress, loginMethod, disconnect } = useUser();
   const { mutate: disconnectWallet } = useDisconnectWallet();
+  const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
 
@@ -32,11 +34,15 @@ export function WalletButton() {
             // Nettoyer le context utilisateur après la déconnexion côté dapp-kit
             disconnect();
             setShowDropdown(false);
+            // Rediriger vers la page d'accueil
+            navigate('/');
           },
           onError: () => {
             // fallback: still clear local state
             disconnect();
             setShowDropdown(false);
+            // Rediriger vers la page d'accueil même en cas d'erreur
+            navigate('/');
           }
         });
         return;
@@ -49,6 +55,8 @@ export function WalletButton() {
     // Nettoyer le context utilisateur
     disconnect();
     setShowDropdown(false);
+    // Rediriger vers la page d'accueil
+    navigate('/');
   };
 
   /**
