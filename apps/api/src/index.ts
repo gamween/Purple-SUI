@@ -37,7 +37,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Logging middleware (développement)
 if (process.env.NODE_ENV !== 'production') {
-  app.use((req: Request, res: Response, next: NextFunction) => {
+  app.use((req: Request, _res: Response, next: NextFunction) => {
     console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
     next();
   });
@@ -48,7 +48,7 @@ if (process.env.NODE_ENV !== 'production') {
 // ========================================
 
 // Health check
-app.get('/health', (req: Request, res: Response) => {
+app.get('/health', (_req: Request, res: Response) => {
   res.json({
     status: 'healthy',
     timestamp: new Date().toISOString(),
@@ -70,7 +70,7 @@ app.use((req: Request, res: Response) => {
 });
 
 // Error handler global
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   console.error('[Server Error]', err);
   res.status(500).json({
     error: 'Internal Server Error',

@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
+import type { IRouter } from 'express';
 
-const router = Router();
+const router: IRouter = Router();
 
 interface TwitchTokenResponse {
   access_token: string;
@@ -70,7 +71,7 @@ router.get('/callback', async (req: Request, res: Response) => {
       throw new Error(`Token exchange failed: ${tokenResponse.statusText}`);
     }
 
-    const tokenData: TwitchTokenResponse = await tokenResponse.json();
+    const tokenData = await tokenResponse.json() as TwitchTokenResponse;
     console.log('[Twitch OAuth] Access token obtained');
 
     // Étape 2: Récupérer les infos utilisateur
@@ -89,7 +90,7 @@ router.get('/callback', async (req: Request, res: Response) => {
       throw new Error(`User fetch failed: ${userResponse.statusText}`);
     }
 
-    const userData: TwitchUserResponse = await userResponse.json();
+    const userData = await userResponse.json() as TwitchUserResponse;
     
     if (!userData.data || userData.data.length === 0) {
       throw new Error('No user data returned from Twitch');
@@ -127,7 +128,7 @@ router.get('/callback', async (req: Request, res: Response) => {
  * GET /api/twitch/status
  * Health check
  */
-router.get('/status', (req: Request, res: Response) => {
+router.get('/status', (_req: Request, res: Response) => {
   res.json({
     status: 'ok',
     message: 'Twitch OAuth API is running',
