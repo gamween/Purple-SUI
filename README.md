@@ -35,7 +35,7 @@ https://purplesui.vercel.app/
 
 ## Video presentation
 
-https://youtu.be/WiZuRljU_XE
+https://youtu.be/qsJLkoj44cQ
 
 ## Other Useful Links
 
